@@ -1,5 +1,5 @@
 import React from "react";
-
+import './Modification.css'
 
 
 const Modification = () => {
@@ -15,7 +15,7 @@ const Modification = () => {
     <div className="bg-gray-bg1 flex h-screen">
       <div className="border-primaryBorder shadow-default m-auto w-full max-w-md rounded-lg border bg-white py-10 px-16">
         <h1 className="text-primary mt-4 mb-12 text-center text-2xl font-medium ">
-          Modfier le mot de passe 🔐
+          Modfier le mot de passe 
         </h1>
 
         <form onSubmit={handleFormSubmit}>
@@ -49,7 +49,7 @@ const Modification = () => {
 
           <div className="mt-6 flex items-center justify-center">
             <button
-              className={`bg-green border-green focus:border-green-dark rounded border py-2 px-4 text-sm text-white focus:outline-none`}
+              className={`bg-green border-green focus:border-green-dark rounded border py-2 px-4 text-sm text-black focus:outline-none`}
             >
               Modifier
             </button>
