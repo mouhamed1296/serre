@@ -1,3 +1,4 @@
+import Connexion from "./components/connexion/Connexion";
 import './App.css'
 import CtrlSysteme from './components/CtrlSysteme/CtrlSysteme'
 import Header from './components/Header/Header'
@@ -12,6 +13,7 @@ function App() {
       <Sidebar/>
       <Mesures/>
       <CtrlSysteme/>
+      <Connexion />
     </div>
     
   )
@@ -19,3 +21,4 @@ function App() {
 }
 
 export default App
+
