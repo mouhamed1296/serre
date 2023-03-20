@@ -1,12 +1,8 @@
+import { Outlet, Route } from "react-router-dom"
+import Dashboard from "../pages/Dashboard"
 
-function App() {
-
-  return (
-    <div>
-      <p className=" text-red-600">Test text</p>
-    </div>
-  );
-
+const App = () => {
+  return (<Outlet />)
 }
 
 export default App
