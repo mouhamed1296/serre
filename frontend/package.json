@@ -9,12 +9,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "fields": "^0.1.24",
+    "mdb-react-ui-kit": "^5.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-hook-form": "^7.43.5",
-    "reactstrap": "^9.1.6",
-    "redux-form": "^8.3.9"
+    "react-hook-form": "^7.43.7",
+    "react-icons": "^4.8.0",
+    "react-scripts": "^5.0.1",
+    "react-router-dom": "^6.9.0"
   },
   "devDependencies": {
     "@types/react": "^18.0.27",
