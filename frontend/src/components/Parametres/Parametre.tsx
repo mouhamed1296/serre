@@ -5,7 +5,7 @@ import imgAloevera from '../../assets/aloevera.png'
 
 function Parametre() {
     return(
-      <div className='flex flex-col bg-white shadow-lg w-2/5 h-3/5'>
+      <div className='flex flex-col bg-white shadow-lg w-2/5 h-3/5 parametre'>
         <h1 className='w-full mt-6 mb-14 text-center text-emerald-600 text-2xl font-medium'> Paméterer l'arrosage</h1>
         <form className='w-full flex flex-col justify-center place-items-center'>
             <div className='flex flex-row w-full justify-center mb-8'>

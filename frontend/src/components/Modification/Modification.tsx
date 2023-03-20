@@ -1,4 +1,3 @@
-import React from "react";
 import './Modification.css'
 
 
@@ -8,8 +7,6 @@ const Modification = () => {
 
     let email = e.target.elements.email?.value;
     let password = e.target.elements.password?.value;
-
-    console.log(password, password);
   };
   return (
     <div className="bg-gray-bg1 flex h-screen">
