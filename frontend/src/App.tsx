@@ -6,14 +6,16 @@ import Mesures from './components/Mesures/Mesures'
 import Parametre from './components/Parametres/Parametre'
 import Sidebar from './components/Sidebar/Sidebar'
 
+
 function App() {
   return(
     <div className='h-screen bg-slate-100'>
-      <Header/>
+   {/*    <Header/>
       <Sidebar/>
       <Mesures/>
       <CtrlSysteme/>
-      <Connexion />
+      <Connexion /> */}
+      
     </div>
     
   )
