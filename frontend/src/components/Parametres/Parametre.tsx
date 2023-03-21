@@ -5,8 +5,8 @@ import imgAloevera from '../../assets/aloevera.png'
 
 function Parametre() {
     return(
-      <div className='flex flex-col bg-white shadow-lg w-2/5 h-3/5'>
-        <h1 className='w-full mt-6 mb-14 text-center text-emerald-600 text-2xl font-medium'> Paméterer l'arrosage</h1>
+      <div className='flex flex-col bg-white shadow-lg justify-center py-8 mx-32 items-center rounded-lg'>
+        <h1 className='w-full text-center mb-2 text-emerald-600 text-2xl font-medium'> Paméterer l'arrosage</h1>
         <form className='w-full flex flex-col justify-center place-items-center'>
             <div className='flex flex-row w-full justify-center mb-8'>
                 <label className='w-2/6 mt-2 text-xl'>Type de plante</label>
