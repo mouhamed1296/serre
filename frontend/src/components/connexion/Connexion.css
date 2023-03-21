@@ -1,0 +1,5 @@
+input:focus ~ span
+input:valid ~ span {
+transform: translateX(-10px) translateY(-32px);
+font-size: 12px;
+}
