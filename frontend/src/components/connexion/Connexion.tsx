@@ -26,9 +26,10 @@ import { useForm } from "react-hook-form";
             </div>
         <div className="flex flex-col  w-full">
 
-          <label htmlFor="email" className="text-white text-2xl relative left-4 top-12" >Email</label>
+{/*           <label htmlFor="email" className="text-white text-2xl relative left-4 top-12" >Email</label> */}
           <input  {...register("email", { required: true, pattern: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/i,
-            })} type="email" id="email"  className="border-b-3 p-5 py-5 rounded-r-lg bg-gray-50/25" />
+            })} type="email" id="email" className="border-b-3 p-5 w-96 py-5 rounded-r-lg bg-gray-50/25 outline-none absolute " />
+            <span className=' p-5 text-xl inline-block font-light transition duration-150 ease-out hover:ease-in pointer-events-none'>Email</span>
             
             {errors.email?.type === "required" && "Email is required"}
             {errors.email?.type === "pattern" &&

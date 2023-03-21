@@ -9,10 +9,10 @@ import Sidebar from './components/Sidebar/Sidebar'
 function App() {
   return(
     <div className='h-screen bg-slate-100'>
-      <Header/>
+    {/*   <Header/>
       <Sidebar/>
       <Mesures/>
-      <CtrlSysteme/>
+      <CtrlSysteme/> */}
       <Connexion />
     </div>
     
