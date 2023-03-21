@@ -1,60 +1,84 @@
-import './Modification.css'
-
+import "./Modification.css";
+import { useForm } from "react-hook-form";
 
 const Modification = () => {
   const handleFormSubmit = (e: any) => {
     e.preventDefault();
 
-    let email = e.target.elements.email?.value;
-    let password = e.target.elements.password?.value;
+    // let email = e.target.elements.email?.value;
+    // let password = e.target.elements.password?.value;
+
+    // console.log(password, password);
   };
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({mode: 'onChange'});
+  const onSubmit = (data: any) => console.log(data);
+  console.log(errors);
+
   return (
-    <div className="bg-gray-bg1 flex h-screen">
-      <div className="border-primaryBorder shadow-default m-auto w-full max-w-md rounded-lg border bg-white py-10 px-16">
-        <h1 className="text-primary mt-4 mb-12 text-center text-2xl font-medium ">
-          Modfier le mot de passe 
+      <div className="border-primaryBorder shadow-default m-auto w-full max-w-md rounded-lg border bg-white px-16">
+        <h1 className="text-emerald-500 mt-4 mb-4 text-center text-2xl font-bold ">
+          Modfier le mot de passe
         </h1>
 
-        <form onSubmit={handleFormSubmit}>
-          <div>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="flex flex-col gap-1">
             <label htmlFor="password">Actuel mot de passe</label>
             <input
+              {...register("actuelPassword", { required: true, maxLength: 80 })}
               type="password"
-              className={`text-primary mb-4 w-full rounded-md border p-2 text-sm outline-none transition duration-150 ease-in-out`}
-              id="email"
+              className={`text-primary mb-4 w-full border-2 border-gray-700 p-2 text-sm outline-none transition duration-150 ease-in-out`}
+              id="actuelPassword"
               placeholder="actuel mot de passe"
             />
           </div>
-          <div>
+          <div className="flex flex-col gap-1">
             <label htmlFor="password">Nouveau mot de passe</label>
             <input
+              {...register("nouveauPassword", {
+                required: true,
+                maxLength: 80,
+              })}
               type="password"
-              className={`text-primary mb-4 w-full rounded-md border p-2 text-sm outline-none transition duration-150 ease-in-out`}
-              id="password"
+              className={`text-primary mb-4 w-full border-2 border-gray-700 rounded-md p-2 text-sm outline-none transition duration-150 ease-in-out`}
+              id="newPassword"
               placeholder="nouveau mot de passe"
             />
           </div>
-          <div>
+          <div className="flex flex-col gap-1">
             <label htmlFor="password">Confirmation mot de passe</label>
             <input
+              {...register("confirmationPassword", {
+                required: true,
+                maxLength: 80,
+              })}
               type="password"
-              className={`text-primary mb-4 w-full rounded-md border p-2 text-sm outline-none transition duration-150 ease-in-out`}
-              id="password"
+              className={`text-primary mb-4 w-full rounded-md border-2 border-gray-700 p-2 text-sm outline-none transition duration-150 ease-in-out`}
+              id="confirmPassword"
               placeholder="confirmation mot de passe"
             />
           </div>
 
-          <div className="mt-6 flex items-center justify-center">
+          <div className="mt-4 mb-5 flex items-center justify-end">
             <button
-              className={`bg-green border-green focus:border-green-dark rounded border py-2 px-4 text-sm text-black focus:outline-none`}
+              type="submit"
+              className={`bg-emerald-100 text-dark focus:border-emerald-800 rounded border py-2 px-4 text-md focus:outline-none`}
             >
               Modifier
             </button>
           </div>
         </form>
       </div>
-    </div>
   );
 };
 
 export default Modification;
+/* 
+
+Modification
+
+*/
