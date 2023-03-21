@@ -17,33 +17,38 @@ import { useForm } from "react-hook-form";
         <div className="bg-gray-100/25 m-8 mr-20 w-3/6">
       <h1 className="flex justify-center font-bold mt-10 text-4xl text-white">CONNEXION</h1>
       <form onSubmit={handleSubmit(onSubmit)} className="  flex flex-col px-32 gap-5 mt-4 items-center">
-        <div className='flex flex-col w-full gap-2'>
-          <div className="flex items-center w-full">
-              <div className="bg-green-600 mt-8 p-3 flex justify-center items-center">
+      <div className="flex items-center w-full">
+              <div className="bg-green-600 mt-2 p-2 flex justify-center items-center">
                 <FaUserAlt className="w-10 h-8 text-white"/>
               </div>
-          <div className="flex flex-col  w-full">
-            <label htmlFor="email" className="text-white text-2xl relative left-4 top-12 focus:top-0 focus:left-0" >Email</label>
-            <input  {...register("email", { required: true, pattern: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/i,
-              })} type="email" id="email"  className="border-b-3 p-4 rounded-r-lg bg-gray-50/25" />
-          </div>
-          </div>
+      <div className="relative">
+      <div className='flex flex-col w-full gap-2'>
+          
+      <input id="email" type="email"  {...register("email", { required: true, pattern: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/i, })} 
+      className="bg-gray-50/25 peer mt-2 h-12 w-96 border-b-2  text-white placeholder-transparent focus:outline-none focus:border-green-600" placeholder="john@doe.com" />
+      <label htmlFor="email" className="absolute mt-2 left-0 -top-8 text-white text-2xl transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-white peer-placeholder-shown:top-2 peer-focus:-top-8 peer-focus:-left-14 peer-focus:text-white peer-focus:text-2xl">Email</label>
+            </div>
+            </div>
+          
           {errors.email?.type === "required" && 
             <span className='text-red-600'>Ce champ est Obligatoire</span>
           }
               {errors.email?.type === "pattern" &&
                 <span className='text-red-600'>Email entré n'est pas valide</span>}
         </div>
-        <div className='flex flex-col w-full gap-2'>
-          <div className="flex items-center w-full">
-              <div className="bg-green-600 mt-8 p-3 py-3 flex justify-center items-center">
+      
+        <div className="flex items-center w-full">
+              <div className="bg-green-600 mt-10 p-2 flex justify-center items-center">
                 <FaLock className="w-10 h-8 text-white"/>
               </div>
+            <div className="mt-10 relative">
+            <div className='flex flex-col w-full gap-2'>
+          
               <div className="w-full flex flex-col">
-                <label htmlFor="password" className=" text-white text-2xl relative left-4 top-12">Mot de passe</label>
-                
-                <input  {...register("password", {  required: true,  minLength: 5,  maxLength: 20,
-              })} type="password" id="password" className="border-b-3 p-4 rounded-r-lg bg-gray-50/25" />        
+              <input id="password" type="password" {...register("password", {  required: true,  minLength: 5,  maxLength: 20, })} 
+              className=" bg-gray-50/25 peer h-12 w-96  border-b-2 text-white placeholder-transparent focus:outline-none focus:border-green-600 " placeholder="Password" />
+              <label htmlFor="password" className="absolute mt-2 left-0 -top-10  text-white text-2xl transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-white peer-placeholder-shown:top-2 peer-focus:-top-10 peer-focus:-left-14 peer-focus:text-white peer-focus:text-2xl">Mot de passe</label>
+            </div>     
               </div>
           </div>
           {errors.password?.type === "minLength" && <p className='text-red-600'>Mot de passe doit être plus de 5 caractères</p>}
@@ -58,7 +63,7 @@ import { useForm } from "react-hook-form";
         <h1 className="flex justify-center font-bold  text-3xl text-white underline underline-offset-4">Poser votre carte !</h1>
           <img src={rfidImg} alt="" className="w-40"/>
         </div>
-      </form>
+     </form>
       </div>
     </div>
     </div>
