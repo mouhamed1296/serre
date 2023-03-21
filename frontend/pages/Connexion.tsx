@@ -1,8 +1,10 @@
+import ConnexionForm from "../src/components/connexion/ConnexionForm"
+
 const Connexion = () => {
   return (
-    <div>
-      Connexion
-    </div>
+    <>
+      <ConnexionForm />
+    </>
   )
 }
 

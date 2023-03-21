@@ -28,12 +28,12 @@ export function Historique() {
     }
 
     return (
-        <div className="flex flex-col items-center justify-center flex-1 text-center">
+        <div className="flex px-5 py-1 flex-col bg-white drop-shadow-lg flex-1 text-center">
             <h1 className="text-3xl text-emerald-500 font-bold">Historique</h1>
-            <div className="w-1/2 flex justify-end">
+            <div className="flex justify-end">
                 <input type="date" onChange={(e) => search(e)} className="border-2 border-gray-500 rounded-md p-2 mt-3" />
             </div>
-            <table className="table-auto mt-3 w-1/2">
+            <table className="table-auto mt-3">
                 <thead>
                 <tr>
                     <th className="px-4 py-2 border-2 border-gray-500">

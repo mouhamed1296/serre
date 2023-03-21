@@ -2,7 +2,7 @@
 const Pagination = () => {
   const hoverStyle = "hover:bg-emerald-100 hover:text-emerald-700 hover:border-emerald-700";
   return (
-    <div className="flex w-1/2 mt-5 justify-end items-center gap-2">
+    <div className="flex mt-5 justify-end items-center gap-2">
         <button className={`text-gray-700  px-3 py-3 rounded-full border ${hoverStyle}`}>
         <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
             className="fill-current"
