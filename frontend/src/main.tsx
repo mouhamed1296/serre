@@ -5,7 +5,6 @@ import App from './App';
 import Dashboard from '../pages/Dashboard';
 import Connexion from '../pages/Connexion';
 import { Historique } from './components/Historique/Historique';
-import Parametrage from './components/Parametrage/Parametrage';
 import Parametre from './components/Parametres/Parametre';
 import Modification from './components/Modification/Modification';
 import CtrlSysteme from './components/CtrlSysteme/CtrlSysteme';
