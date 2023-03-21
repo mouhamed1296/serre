@@ -39,7 +39,7 @@ function CtrlSysteme() {
                                     <button onClick={handleClick} className='flex justify-center ml-6'>
                                         <svg fill="#12B886" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="50px" height="50px"><path d="M22,7C19.867,7,8.513,7,8,7c-4.418,0-8,3.582-8,8s3.582,8,8,8c0.513,0,11.867,0,14,0c4.418,0,8-3.582,8-8S26.418,7,22,7z M22,21c-3.314,0-6-2.686-6-6s2.686-6,6-6s6,2.686,6,6S25.314,21,22,21z" /></svg>
                                     </button>
-                                    <p className='text-center font-medium'>Arreter</p>
+                                    <p className='text-center font-medium'>Arrêter</p>
                                 </div>
                                 :
                                 <div className='bg-white w-24 h-24 rounded-full mt-5 ml-20'>
