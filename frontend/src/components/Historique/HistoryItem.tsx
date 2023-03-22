@@ -10,9 +10,7 @@ const HistoryItem: React.FC<HistoryItemProps> = ({data}: HistoryItemProps) => {
   return (
     <tr>
         <td className="border-2 border-gray-500 px-4 py-2">{data.date}</td>
-        <td className="border-2 border-gray-500 px-4 
-        py-2"
-        >
+        <td className="border-2 border-gray-500 px-4 py-2">
             <div className="flex justify-center items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
                     width="20" height="20"
