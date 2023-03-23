@@ -72,7 +72,7 @@ const Modification = () => {
             placeholder="confirmation mot de passe"
           />
           {errors.confirmationPassword &&
-            <span className='text-red-600'>{errors.confirmationPassword?.message}</span>
+            <span className='text-red-600'>{errors.confirmationPassword.message as string}</span>
           }
         </div>
 
