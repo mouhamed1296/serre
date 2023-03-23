@@ -3,7 +3,6 @@ import { Historique } from "../src/components/Historique/Historique";
 import Header from "../src/components/Header/Header";
 import Sidebar from "../src/components/Sidebar/Sidebar";
 import Mesures from "../src/components/Mesures/Mesures";
-import CtrlSysteme from "../src/components/CtrlSysteme/CtrlSysteme";
 
 const Dashboard = () => {
 
@@ -17,7 +16,6 @@ const Dashboard = () => {
         <Outlet />
        </div>
       </div>
-      {/*<CtrlSysteme /> */}
     </div>
   );
 
