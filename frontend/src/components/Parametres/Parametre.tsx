@@ -65,7 +65,7 @@ function Parametre() {
                 {errors.nombre?.type === "pattern" && 
                     <span className='text-red-600 ml-80 text-sm'>Format incorrect</span>
                 }
-                </div>
+            </div>
             <div className='w-full'>
                 <div className='flex flex-row w-full justify-center'>
                     <label htmlFor='heure' className='w-2/6 mt-2 text-xl'>Heures d'arrosage</label>
