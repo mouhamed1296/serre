@@ -8,6 +8,7 @@ import { Historique } from './components/Historique/Historique';
 import Parametre from './components/Parametres/Parametre';
 import Modification from './components/Modification/Modification';
 import CtrlSysteme from './components/CtrlSysteme/CtrlSysteme';
+import Sauvegarde from './components/Sauvegarde/Sauvegarde';
 
 /* Routeur pour la navigation entre les différents interfaces */
 const router = createBrowserRouter(
@@ -18,6 +19,7 @@ const router = createBrowserRouter(
         <Route index element={<CtrlSysteme />} />
         <Route path="history" element={<Historique />} />
         <Route path="parametrage" element={<Parametre />} />
+        <Route path="sauvegarde" element={<Sauvegarde />} />
       </Route>
       <Route index element={<Connexion />} />
       <Route path="*" element={<div>Not found</div>} />

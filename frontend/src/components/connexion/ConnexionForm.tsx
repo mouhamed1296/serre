@@ -4,7 +4,7 @@ import { FaLock} from 'react-icons/fa';
 import rfidImg from '../../assets/carte-rfid.png'/*importer une image */
 import { useForm } from "react-hook-form";/*React Hook Form réduit la quantité de code que vous devez écrire tout en supprimant les rendus inutiles. */
 
- const ConnexionForm = () => {
+const ConnexionForm = () => {
   const {
     register,
     formState: { errors },/* il contient des informations sur l'état complet du formulaire.
@@ -74,7 +74,7 @@ import { useForm } from "react-hook-form";/*React Hook Form réduit la quantité
     </div>
     </div>
   );
-} 
+}
 
 export default ConnexionForm;
 

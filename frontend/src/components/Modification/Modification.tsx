@@ -12,8 +12,8 @@ const Modification = () => {
   } = useForm({ mode: 'onChange' });
   const onSubmit = (data: any) => console.log(data);
   console.log(errors);
-  const password=useRef({})
-  password.current=watch("nouveauPassword", "")
+  const password = useRef({})
+  password.current = watch("nouveauPassword", "")
 
   return (
     <div className="border-primaryBorder drop-shadow-lg m-auto w-3/5 h-1/2 rounded-lg border bg-white px-16">
@@ -61,8 +61,8 @@ const Modification = () => {
           <label htmlFor="password" className="text-lg">Confirmation mot de passe</label>
           <input
             {...register("confirmationPassword", {
-              required: {value: true, message: "Champ Obligatoire"},
-              validate: value=>password.current===value || "Les deux mots de passe ne correspondent pas"
+              required: { value: true, message: "Champ Obligatoire" },
+              validate: value => password.current === value || "Les deux mots de passe ne correspondent pas"
             })}
             type="password"
             className={`text-primary mb-4 w-full rounded-md border-2 border-gray-700 p-2 text-sm outline-none transition duration-150 ease-in-out`}
