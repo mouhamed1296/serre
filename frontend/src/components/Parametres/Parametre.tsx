@@ -26,7 +26,7 @@ function Parametre() {
         register,
         formState: { errors },
         handleSubmit,
-      } = useForm();
+      } = useForm({ mode: 'onChange' });
       const onSubmit = (data: any) => console.log(data);
 
     return(
