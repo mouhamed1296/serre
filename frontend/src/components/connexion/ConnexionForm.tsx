@@ -1,15 +1,15 @@
 
 import { FaUserAlt } from 'react-icons/fa';
-import { FaLock} from 'react-icons/fa';
+import { FaLock } from 'react-icons/fa';
 import rfidImg from '../../assets/carte-rfid.png'
 import { useForm } from "react-hook-form";
 
- const ConnexionForm = () => {
+const ConnexionForm = () => {
   const {
     register,
     formState: { errors },
     handleSubmit,
-  } = useForm({ mode: "onChange"});
+  } = useForm({ mode: "onChange" });
   const onSubmit = (data: any) => console.log(data);
   return (
     <div className=" flex ">
@@ -72,7 +72,7 @@ import { useForm } from "react-hook-form";
     </div>
     </div>
   );
-} 
+}
 
 export default ConnexionForm;
 
