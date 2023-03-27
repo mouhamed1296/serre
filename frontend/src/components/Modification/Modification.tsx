@@ -3,14 +3,6 @@ import { useForm } from "react-hook-form";
 import { useRef } from "react";
 
 const Modification = () => {
-  const handleFormSubmit = (e: any) => {
-    e.preventDefault();
-
-    // let email = e.target.elements.email?.value;
-    // let password = e.target.elements.password?.value;
-
-    // console.log(password, password);
-  };
 
   const {
     register,
@@ -32,26 +24,37 @@ const Modification = () => {
         <div className="flex flex-col">
           <label htmlFor="password" className="text-lg">Actuel mot de passe</label>
           <input
-            {...register("actuelPassword", { required: true, maxLength: 80 })}
+            {...register("actuelPassword", { required: true,  minLength: 5, maxLength: 20 })}
             type="password"
             className={`text-primary mb-4 w-full border-2 border-gray-700 rounded-md p-2 text-sm outline-none transition duration-150 ease-in-out`}
             id="actuelPassword"/>
           {errors.actuelPassword?.type === "required" &&
             <span className='text-red-600 text-sm -mt-4'>Ce champ est Obligatoire</span>
           }
+          {errors.actuelPassword?.type === "minLength" &&
+            <span className='text-red-600 text-sm -mt-4'>Miminum 5 caractères</span>
+          }
+          {errors.actuelPassword?.type === "maxLength" &&
+            <span className='text-red-600 text-sm -mt-4'>Maximum 20 caractères</span>
+          }
         </div>
         <div className="flex flex-col">
           <label htmlFor="password" className="text-lg">Nouveau mot de passe</label>
           <input
             {...register("nouveauPassword", {
-              required: {value: true, message: "Champ Obligatoire"},
-             /*  validate: value=>password.current===value || "Les deux mots de passe ne correspondent pas" */
+              required: {value: true, message: "Champ Obligatoire"}, minLength: 5, maxLength: 20 
             })}
             type="password"
             className={`text-primary mb-4 w-full border-2 border-gray-700 rounded-md p-2 text-sm outline-none transition duration-150 ease-in-out`}
             id="newPassword"/>
           {errors.nouveauPassword?.type === "required" &&
             <span className='text-red-600 text-sm -mt-4'>Ce champ est Obligatoire</span>
+          }
+          {errors.nouveauPassword?.type === "minLength" &&
+            <span className='text-red-600 text-sm -mt-4'>Miminum 5 caractères</span>
+          }
+          {errors.nouveauPassword?.type === "maxLength" &&
+            <span className='text-red-600 text-sm -mt-4'>Maximum 20 caractères</span>
           }
         </div>
         <div className="flex flex-col">
