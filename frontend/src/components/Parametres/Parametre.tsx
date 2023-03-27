@@ -30,7 +30,7 @@ function Parametre() {
       const onSubmit = (data: any) => console.log(data);
 
     return(
-      <div className='flex flex-col bg-white h-96 shadow-lg justify-center py-8 mx-32 items-center rounded-lg'>
+      <div className='flex flex-col bg-white h-96 shadow-lg border border-primaryBorder justify-center py-8 mx-32 items-center rounded-lg'>
         <h1 className='w-full text-center mb-5 text-emerald-600 text-2xl font-medium'> Paméterer l'arrosage</h1>
         <form onSubmit={handleSubmit(onSubmit)} className='w-full flex flex-col justify-center place-items-center space-y-6'>
             <div className='w-full'>
@@ -65,7 +65,7 @@ function Parametre() {
                 {errors.nombre?.type === "pattern" && 
                     <span className='text-red-600 ml-80 text-sm'>Format incorrect</span>
                 }
-                </div>
+            </div>
             <div className='w-full'>
                 <div className='flex flex-row w-full justify-center'>
                     <label htmlFor='heure' className='w-2/6 mt-2 text-xl'>Heures d'arrosage</label>
