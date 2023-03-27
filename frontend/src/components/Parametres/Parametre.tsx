@@ -92,8 +92,4 @@ function Parametre() {
   
   }
   
-  export default Parametre
-
-function useQuery(): { data: any; } {
-    throw new Error('Function not implemented.');
-}
+  export default Parametre;
