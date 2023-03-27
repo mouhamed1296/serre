@@ -3,14 +3,22 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { MongooseModule } from '@nestjs/mongoose';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
     UserModule,
     //Lien avec la base de donnée MongoDB
-    MongooseModule.forRoot(
-      'mongodb+srv://msarr:namass20@eventcluster.0xsvy.mongodb.net/serre?retryWrites=true&w=majority',
-    ),
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        uri: configService.get<string>('MONGODB_URI'),
+      }),
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],
