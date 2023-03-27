@@ -1,5 +1,4 @@
-import { Outlet, Route } from "react-router-dom"
-import Dashboard from "../pages/Dashboard"
+import { Outlet } from "react-router-dom"
 
 const App = () => {
   return (<Outlet />)
