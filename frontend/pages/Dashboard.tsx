@@ -10,7 +10,7 @@ const Dashboard = () => {
     <div className="h-screen bg-slate-100">
       <Header />
       <Sidebar />
-      <div className='absolute top-12' style={{left: "25%",  width: "66.666667%"}}>
+      <div className='absolute' style={{left: "25%",  width: "66.666667%", top: "48px"}}>
        <Mesures />
        <div className="mt-5">
         <Outlet />
