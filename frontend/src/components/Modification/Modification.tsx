@@ -52,9 +52,7 @@ const Modification = () => {
             })}
             type="password"
             className={`text-primary mb-4 w-full border-2 border-gray-700 rounded-md p-2 text-sm outline-none transition duration-150 ease-in-out`}
-            id="newPassword"
-            placeholder="nouveau mot de passe"
-          />
+            id="newPassword" placeholder="nouveau mot de passe"/>
           {errors.nouveauPassword?.type === "required" &&
             <span className='text-red-600'>Ce champ est Obligatoire</span>
           }
@@ -68,9 +66,7 @@ const Modification = () => {
             })}
             type="password"
             className={`text-primary mb-4 w-full rounded-md border-2 border-gray-700 p-2 text-sm outline-none transition duration-150 ease-in-out`}
-            id="confirmPassword"
-            placeholder="confirmation mot de passe"
-          />
+            id="confirmPassword" placeholder="confirmation mot de passe" />
           {errors.confirmationPassword &&
             <span className='text-red-600'>{errors.confirmationPassword.message as string}</span>
           }
