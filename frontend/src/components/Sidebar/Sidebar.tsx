@@ -53,6 +53,7 @@ function Sidebar() {
               </button>
             </div>
         </Link>
+        <Link to="sauvegarde">
         <div className='flex justify-center m-6'>
           <button className="bg-emerald-100 hover:bg-emerald-600 hover:text-white py-3 px-6 w-44 h-12 font-medium rounded-lg drop-shadow-lg flex flex-row">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
@@ -61,6 +62,7 @@ function Sidebar() {
             <span className='ml-2'>Sauvegardes</span>
           </button>
         </div>
+        </Link>
         <div className='flex justify-center text-white'>
           <button onClick={() => logout()} className="bg-emerald-600 hover:text-black hover:bg-emerald-100 py-3 mt-24 px-6 w-44 h-12 font-medium rounded-lg drop-shadow-lg flex flex-row">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
