@@ -4,11 +4,16 @@ import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+
 import { AuthModule } from './auth/auth.module';
+
+import { PlantesModule } from './plantes/plantes.module';
+import { ClimatModule } from './climat/climat.module';
 
 @Module({
   imports: [
     UserModule,
+    ClimatModule,
     //Lien avec la base de donnée MongoDB
     ConfigModule.forRoot({
       isGlobal: true,
@@ -21,6 +26,7 @@ import { AuthModule } from './auth/auth.module';
       }),
     }),
     AuthModule,
+    PlantesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
