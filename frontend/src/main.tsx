@@ -14,7 +14,7 @@ import Sauvegarde from './components/Sauvegarde/Sauvegarde';
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
-      <Route path="/dashboard" element={<Dashboard />}>
+      <Route path="/dashboard" element={<Dashboard token={localStorage.getItem('token')}/>}>
         <Route path="modificationProfil" element={<Modification />} />
         <Route index element={<CtrlSysteme />} />
         <Route path="history" element={<Historique />} />

@@ -6,10 +6,12 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { JwtAuthGuard } from '../auth/jwtAuthGuard';
 
 //Controller pour les utilisateurs chargé de gérer les routes
 //de l'api pour les utilisateurs et de communiquer avec le service
@@ -25,6 +27,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 //Exemple:GET /user/1 pour récupérer l'utilisateur avec l'id 1
 //Exemple:PATCH /user/1 pour modifier l'utilisateur avec l'id 1
 //Exemple:DELETE /user/1 pour supprimer l'utilisateur avec l'id 1
+@UseGuards(JwtAuthGuard)
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
