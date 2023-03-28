@@ -2,21 +2,49 @@
 import { FaUserAlt } from 'react-icons/fa';/*pour importer des icons */
 import { FaLock} from 'react-icons/fa';
 import rfidImg from '../../assets/carte-rfid.png'/*importer une image */
-import { useForm } from "react-hook-form";/*React Hook Form réduit la quantité de code que vous devez écrire tout en supprimant les rendus inutiles. */
+import { useForm } from "react-hook-form";
+import {useNavigate} from "react-router-dom";
+import {useState} from "react";
+/*React Hook Form réduit la quantité de code que vous devez écrire tout en supprimant les rendus inutiles. */
 
 const ConnexionForm = () => {
+  const navigate = useNavigate();/*useNavigate est un hook personnalisé pour naviguer entre les pages */
+  const [errorMessage, setErrorMessage] = useState('');/*useState est un hook qui vous permet d'ajouter l'état local à des fonctions de composant React.*/
+
   const {
     register,
     formState: { errors },/* il contient des informations sur l'état complet du formulaire.
                              Il vous aide à suivre l'interaction de l'utilisateur avec votre application de formulaire. */
     handleSubmit,/* gérerSoumettre Prêt à envoyer au serveur */
   } = useForm({ mode: "onChange"});/* useForm est un crochet personnalisé pour gérer facilement les formulaires. */
-  const onSubmit = (data: any) => console.log(data);
+  const onSubmit = (data: any) => {
+    fetch('http://localhost:3000/auth/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    }).then(res => {
+        if (res.status === 201) {
+            return res.json()
+        } else {
+            return res.json().then(data => {
+              setErrorMessage(data.message)
+            })
+        }
+    }).then(data => {
+        localStorage.setItem('token', data.access_token)
+      navigate('/dashboard');
+    })
+  }
   return (
     <div className=" flex ">
       <div className=" h-screen w-screen drop-shadow-5xl bg-[url('assets/image.jpeg')] bg-no-repeat bg-cover bg-center flex justify-end">
         <div className="bg-gray-100/25 m-8 mr-20 w-3/6">
           <h1 className="flex justify-center font-bold mt-10 text-4xl text-white">CONNEXION</h1>
+
+              {errorMessage !=='' && <p className='text-red-600 mt-1 bg-red-100 mx-36 py-1 rounded-md  font-bold text-md text-center'>{ errorMessage }</p>}
+
           {/* formulaire de connexion */}
           <form onSubmit={handleSubmit(onSubmit)} className="  flex flex-col px-32 gap-5 mt-10 items-center">
             <div className="flex flex-col gap-2">
