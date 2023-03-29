@@ -1,5 +1,4 @@
-import {Link, Navigate, Outlet, Route} from "react-router-dom";
-import { Historique } from "../src/components/Historique/Historique";
+import {Navigate, Outlet} from "react-router-dom";
 import Header from "../src/components/Header/Header";
 import Sidebar from "../src/components/Sidebar/Sidebar";
 import Mesures from "../src/components/Mesures/Mesures";
