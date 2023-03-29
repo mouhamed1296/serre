@@ -4,6 +4,10 @@ import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+
+import { AuthModule } from './auth/auth.module';
+
+import { PlantesModule } from './plantes/plantes.module';
 import { ClimatModule } from './climat/climat.module';
 
 @Module({
@@ -21,6 +25,8 @@ import { ClimatModule } from './climat/climat.module';
         uri: configService.get<string>('MONGODB_URI'),
       }),
     }),
+    AuthModule,
+    PlantesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
