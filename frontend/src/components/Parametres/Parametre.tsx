@@ -69,7 +69,7 @@ function Parametre() {
             <div className='w-full'>
                 <div className='flex flex-row w-full justify-center'>
                     <label htmlFor='heure' className='w-2/6 mt-2 text-xl'>Heures d'arrosage</label>
-                    <input {...register("heure", {  required: true , pattern: /^[0-9]{2}h\/[0-9]{2}h\/[0-9]{2}h$ |^[0-9]{2}h\/[0-9]{2}h$ |^[0-9]{2}h$/})} 
+                    <input {...register("heure", {  required: true, pattern: /^[0-23]+h\/[0-23]+h\/[0-23]+h$/})} 
                     type="text" name='heure' className='w-1/2 h-12 ml-8 border border-gray-200 rounded'
                     value={heure}
                     onChange={(e) => setHeure(e.target.value)}

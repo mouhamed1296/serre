@@ -6,6 +6,7 @@ import { CreateClimatDto } from './dto/create-climat.dto';
 export class ClimatController {
   constructor(private readonly climatService: ClimatService) {}
 
+  
   @Post()
   create(@Body() createClimatDto: CreateClimatDto) {
     return this.climatService.create(createClimatDto);

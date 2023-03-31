@@ -5,8 +5,6 @@ import rfidImg from '../../assets/carte-rfid.png'/*importer une image */
 import { useForm } from "react-hook-form";
 import {useNavigate} from "react-router-dom";
 import {useCallback, useEffect, useState} from "react";
-import useWebSocket, {ReadyState} from "react-use-websocket";
-import {io} from "socket.io-client";
 import useSocketIO from "../../hooks/useSocketIO";
 /*React Hook Form réduit la quantité de code que vous devez écrire tout en supprimant les rendus inutiles. */
 
@@ -46,75 +44,7 @@ const ConnexionForm = () => {
           console.log('connected')
       }
     }, [connected]);
-  /*const socket = io(socketUrl, {
-    transports: ['websocket'],
-    autoConnect: false,
-    reconnection: true,
-    reconnectionDelay: 1000,
-    reconnectionDelayMax: 5000,
-    reconnectionAttempts: 10,
-  })
-  useEffect(() => {
-    socket.connect()
-    return () => {
-      socket.disconnect()
-    }
-  }, []);
-  useEffect(() => {
-    socket.on('connect', () => {
-      console.log('connected')
-    })
-    socket.on('disconnect', () => {
-      console.log('disconnected')
-    })
-    socket.on('error', (error) => {
-      console.log('error', error)
-    })
-    socket.on('hello', (message) => {
-      console.log('message', message)
-    })
-    socket.on('reconnect', (attemptNumber) => {
-      console.log('reconnect', attemptNumber)
-    })
-    socket.on('reconnect_attempt', (attemptNumber) => {
-      console.log('reconnect_attempt', attemptNumber)
-    })
-    socket.on('reconnecting', (attemptNumber) => {
-      console.log('reconnecting', attemptNumber)
-    })
-    socket.on('reconnect_error', (error) => {
-      console.log('reconnect_error', error)
-    })
-    socket.on('reconnect_failed', () => {
-      console.log('reconnect_failed')
-    })
-  }, [socket]);
-
-  useEffect(() => {
-    socket.on('message', (message) => {
-      console.log('message', message)
-    })
-    }, [socket]);
-
-
-    const handleClickSendMessage = useCallback(() => socket.emit('message', 'message'), []);*/
-
-  /*const {
-    sendMessage,
-    sendJsonMessage,
-    lastMessage,
-    lastJsonMessage,
-    readyState,
-    getWebSocket,
-  } = useWebSocket(socketUrl, {
-    onOpen: () => console.log('opened'),
-    onClose: () => console.log('closed'),
-    fromSocketIO: true,
-    //Will attempt to reconnect on all close events, such as server shutting down
-    shouldReconnect: (closeEvent) => true,
-  });
-
-  const handleClickSendMessage = useCallback(() => sendMessage('message'), []);*/
+  
 
   const {
     register,
