@@ -6,10 +6,6 @@ import { CreateClimatDto } from './dto/create-climat.dto';
 export class ClimatController {
   constructor(private readonly climatService: ClimatService) {}
 
-  @Get('sensor')
-  getSensorData() {
-    return this.climatService.getSensorData();
-  }
   
   @Post()
   create(@Body() createClimatDto: CreateClimatDto) {

@@ -1,10 +1,10 @@
-import {Navigate, Outlet} from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import Header from "../src/components/Header/Header";
 import Sidebar from "../src/components/Sidebar/Sidebar";
 import Mesures from "../src/components/Mesures/Mesures";
 import {useEffect, useState} from "react";
 
-const Dashboard = ({token, redirectPath ='/'}: {token: string | null, redirectPath?: string}) => {
+const Dashboard = ({ redirectPath ='/'}: { redirectPath?: string}) => {
     const access_token = localStorage.getItem('token');
     const [user, setUser] = useState<any>({nom: 'Nom', prenom: 'Prenom'});
 
@@ -16,9 +16,9 @@ const Dashboard = ({token, redirectPath ='/'}: {token: string | null, redirectPa
                 'Authorization': `Bearer ${access_token}`,
             },
         }).then(r => r.json())
-            .then(data => {
-                setUser(data);
-            })
+        .then(data => {
+            setUser(data);
+        })
     }, [access_token])
 
 
