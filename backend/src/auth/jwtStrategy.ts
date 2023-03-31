@@ -10,6 +10,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       ignoreExpiration: false,
       secretOrKey: 'secretKey',
     });
+    console.log(ExtractJwt.fromAuthHeaderAsBearerToken());
   }
 
   //verified callback

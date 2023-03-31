@@ -6,7 +6,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './jwtStrategy';
 import { AuthGateway } from './auth.gateway';
-import {Socket} from "socket.io";
+import { Socket } from 'socket.io';
 
 @Module({
   controllers: [AuthController],

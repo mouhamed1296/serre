@@ -47,6 +47,7 @@ private parser: = port.pipe(new ReadlineParser({ delimiter: '\r\n' }));*/
     dataBits: 8,
     parity: 'none',
     stopBits: 1,
+    autoOpen: false,
   });
 
   private parser = this.port.pipe(new ReadlineParser({ delimiter: '\r\n' }));
