@@ -4,6 +4,7 @@ import NoResult from "./NoResult";
 import Pagination from "./Pagination";
 import HistoryItem from "./HistoryItem";
 
+
 /* Composant Historique */
 export function Historique() {
 
