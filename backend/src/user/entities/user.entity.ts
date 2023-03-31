@@ -14,6 +14,9 @@ export class User {
 
   @Prop()
   password: string;
+
+  @Prop()
+  rfId: string;
 }
 
 export type UserDocument = User & Document;

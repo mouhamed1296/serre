@@ -11,10 +11,11 @@ import CtrlSysteme from './components/CtrlSysteme/CtrlSysteme';
 import Sauvegarde from './components/Sauvegarde/Sauvegarde';
 
 /* Routeur pour la navigation entre les différents interfaces */
+const token = localStorage.getItem('token');
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
-      <Route path="/dashboard" element={<Dashboard token={localStorage.getItem('token')}/>}>
+      <Route path="/dashboard" element={<Dashboard />}>
         <Route path="modificationProfil" element={<Modification />} />
         <Route index element={<CtrlSysteme />} />
         <Route path="history" element={<Historique />} />

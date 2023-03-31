@@ -4,37 +4,145 @@ import { FaLock} from 'react-icons/fa';
 import rfidImg from '../../assets/carte-rfid.png'/*importer une image */
 import { useForm } from "react-hook-form";
 import {useNavigate} from "react-router-dom";
-import {useState} from "react";
+import {useCallback, useEffect, useState} from "react";
+import useWebSocket, {ReadyState} from "react-use-websocket";
+import {io} from "socket.io-client";
+import useSocketIO from "../../hooks/useSocketIO";
 /*React Hook Form réduit la quantité de code que vous devez écrire tout en supprimant les rendus inutiles. */
 
 const ConnexionForm = () => {
   const navigate = useNavigate();/*useNavigate est un hook personnalisé pour naviguer entre les pages */
   const [errorMessage, setErrorMessage] = useState('');/*useState est un hook qui vous permet d'ajouter l'état local à des fonctions de composant React.*/
+  const socketUrl = 'ws://localhost:3000/auth';
+  const { connected, socket, listenMessage, sendMessage } = useSocketIO(socketUrl);
+
+  useEffect(() => {
+      listenMessage('hello', (message) => {
+        console.log('message', message)
+      })
+
+      listenMessage('data', (message) => {
+        console.log('data', message)
+          //setErrorMessage('Accès refusé pour la carte RFID: ' + message);
+      })
+
+      listenMessage('auth', (data) => {
+          if(!data.error) {
+              localStorage.setItem('token', data.access_token);
+              navigate('/dashboard');
+          } else {
+              setErrorMessage(data.message);
+          }
+      })
+  }, [listenMessage]);
+
+  useEffect(() => {
+        sendMessage('open_port', 'hello');
+  }
+    , [sendMessage]);
+
+  useEffect(() => {
+      if(connected) {
+          console.log('connected')
+      }
+    }, [connected]);
+  /*const socket = io(socketUrl, {
+    transports: ['websocket'],
+    autoConnect: false,
+    reconnection: true,
+    reconnectionDelay: 1000,
+    reconnectionDelayMax: 5000,
+    reconnectionAttempts: 10,
+  })
+  useEffect(() => {
+    socket.connect()
+    return () => {
+      socket.disconnect()
+    }
+  }, []);
+  useEffect(() => {
+    socket.on('connect', () => {
+      console.log('connected')
+    })
+    socket.on('disconnect', () => {
+      console.log('disconnected')
+    })
+    socket.on('error', (error) => {
+      console.log('error', error)
+    })
+    socket.on('hello', (message) => {
+      console.log('message', message)
+    })
+    socket.on('reconnect', (attemptNumber) => {
+      console.log('reconnect', attemptNumber)
+    })
+    socket.on('reconnect_attempt', (attemptNumber) => {
+      console.log('reconnect_attempt', attemptNumber)
+    })
+    socket.on('reconnecting', (attemptNumber) => {
+      console.log('reconnecting', attemptNumber)
+    })
+    socket.on('reconnect_error', (error) => {
+      console.log('reconnect_error', error)
+    })
+    socket.on('reconnect_failed', () => {
+      console.log('reconnect_failed')
+    })
+  }, [socket]);
+
+  useEffect(() => {
+    socket.on('message', (message) => {
+      console.log('message', message)
+    })
+    }, [socket]);
+
+
+    const handleClickSendMessage = useCallback(() => socket.emit('message', 'message'), []);*/
+
+  /*const {
+    sendMessage,
+    sendJsonMessage,
+    lastMessage,
+    lastJsonMessage,
+    readyState,
+    getWebSocket,
+  } = useWebSocket(socketUrl, {
+    onOpen: () => console.log('opened'),
+    onClose: () => console.log('closed'),
+    fromSocketIO: true,
+    //Will attempt to reconnect on all close events, such as server shutting down
+    shouldReconnect: (closeEvent) => true,
+  });
+
+  const handleClickSendMessage = useCallback(() => sendMessage('message'), []);*/
 
   const {
     register,
     formState: { errors },/* il contient des informations sur l'état complet du formulaire.
                              Il vous aide à suivre l'interaction de l'utilisateur avec votre application de formulaire. */
     handleSubmit,/* gérerSoumettre Prêt à envoyer au serveur */
-  } = useForm({ mode: "onChange"});/* useForm est un crochet personnalisé pour gérer facilement les formulaires. */
+  } = useForm({ mode: "onChange"});/* useForm est un hook personnalisé pour gérer facilement les formulaires. */
+
+  //Connecter le formulaire à l'API pour l'authentification
   const onSubmit = (data: any) => {
     fetch('http://localhost:3000/auth/login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify({email: data.email, password: data.password})
     }).then(res => {
         if (res.status === 201) {
             return res.json()
         } else {
+            //sendMessage('message', 'cool');
             return res.json().then(data => {
               setErrorMessage(data.message)
             })
         }
     }).then(data => {
-        localStorage.setItem('token', data.access_token)
-      navigate('/dashboard');
+        localStorage.setItem('token', data.access_token);
+        navigate('/dashboard');
     })
   }
   return (
@@ -91,7 +199,7 @@ const ConnexionForm = () => {
               </div>
             </div>
         <div>
-        <button  onClick={onSubmit} className="p-4 mt-6 bg-green-600 rounded text-white font-bold text-xl  hover:text-red-500">Se Connecter</button>
+        <button className="p-4 mt-6 bg-green-600 rounded text-white font-bold text-xl  hover:bg-green-700">Se Connecter</button>
         </div>
         <div>
         <h1 className="flex justify-center font-bold  text-3xl text-white underline underline-offset-4">Poser votre carte !</h1>

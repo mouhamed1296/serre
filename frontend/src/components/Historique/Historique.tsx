@@ -1,4 +1,4 @@
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import climat_history, { Climat } from "../../fake_api/historique";
 import NoResult from "./NoResult";
 import Pagination from "./Pagination";
@@ -8,16 +8,39 @@ import HistoryItem from "./HistoryItem";
 export function Historique() {
 
     /* Stockage des données de l'historique dans une variable d'état */
-    const [data, setData] = useState<Climat[]>(climat_history);
+    const [data, setData] = useState<Climat[]>([]);
+
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [itemsPerPage] = useState<number>(4);
+    const [totalItems] = useState<number>(climat_history.length);
+
+    /* Fonction de pagination */
+    const paginate = (pageNumber: number) => {
+        setCurrentPage(pageNumber);
+
+        const indexOfLastItem = pageNumber * itemsPerPage;
+        const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+        const currentItems = climat_history.slice(indexOfFirstItem, indexOfLastItem);
+        setData(currentItems);
+    }
+
+    useEffect(() => {
+        paginate(1);
+    }, []);
+
+    /* Variable d'état pour gèrer le mode recherche */
+    const [searchMode, setSearchMode] = useState<boolean>(false);
 
     /* Variable d'état pour vérifier si la recherche a eu un résultat ou non */
     const [hasResult, setHasResult] = useState<boolean>(true);
 
     /* Fonction de recherche par date */
     const search = (e: any) => {
+        setSearchMode(true);
         const value = e.target.value;
         if (value === "") {
-            setData(climat_history);
+            setSearchMode(false);
+            paginate(1);
             return;
         }
         const result = climat_history.filter((item) => {
@@ -28,7 +51,7 @@ export function Historique() {
     }
 
     return (
-        <div className="flex px-5 py-1 flex-col bg-white drop-shadow-lg flex-1 text-center">
+        <div className="flex px-5 h-96 py-1 flex-col bg-white drop-shadow-lg flex-1 text-center">
             <h1 className="text-3xl text-emerald-500 font-bold">Historique</h1>
             <div className="flex justify-end">
                 <input type="date" onChange={(e) => search(e)} className="border-2 border-gray-500 rounded-md p-2 mt-3" />
@@ -55,7 +78,12 @@ export function Historique() {
                 }
                 </tbody>
             </table>
-            {hasResult && <Pagination />}
+            {!searchMode && hasResult && <Pagination
+                paginate={paginate}
+                currentPage={currentPage}
+                itemsPerPage={itemsPerPage}
+                totalItems={totalItems}
+            />}
         </div>
     );
 }
