@@ -20,4 +20,7 @@ export class CreateUserDto {
 
   @IsNotEmpty({ message: 'Le mot de passe est requis' })
   password: string;
+
+  @IsNotEmpty({ message: "RFID requis pour l'accés à la plateforme" })
+  rfId: string;
 }
