@@ -16,7 +16,7 @@ export class ClimatService implements OnGatewayConnection{
   private parser: ReadlineParser;
 
   constructor(@InjectModel(Climat.name) private ClimatSchema: Model<ClimatDocument>) {
-    this.port = new SerialPort({path:'/dev/ttyACM1', baudRate: 9600 });
+    this.port = new SerialPort({path:'/dev/ttyACM0', baudRate: 9600 });
     this.parser = this.port.pipe(new ReadlineParser({ delimiter: '\r\n' }));
   }
 
@@ -44,9 +44,28 @@ async handleConnection(client: socketio.Socket, ...args: any[]) {
             } 
           }
         }
+
   });
 }
-  
+  //Calcule de la moyenne des valeurs
+  async aggregateValues(): Promise<any> {
+    const result = await this.ClimatSchema.aggregate([
+      {
+        $group: {
+          _id: {
+            year: { $year: '$savedAt' },
+            month: { $month: '$savedAt' },
+            day: { $dayOfMonth: '$savedAt' },
+          },
+          temperature: { $avg: '$temperature' },
+          humidityA: { $avg: '$humidityA' },
+          humidityS: { $avg: '$humidityS' },
+          luminosity: { $avg: '$luminosity' },
+        },
+      },
+    ]);
+    return result;
+  }
 
   create(createClimatDto: CreateClimatDto) {
     const createdClimat = new this.ClimatSchema(createClimatDto);
