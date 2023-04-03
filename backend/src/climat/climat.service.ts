@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -63,6 +64,25 @@ export class ClimatService implements OnGatewayConnection {
         }
       }
     });
+  }
+  //Calcule de la moyenne des valeurs
+  async aggregateValues(): Promise<any> {
+    const result = await this.ClimatSchema.aggregate([
+      {
+        $group: {
+          _id: {
+            year: { $year: '$savedAt' },
+            month: { $month: '$savedAt' },
+            day: { $dayOfMonth: '$savedAt' },
+          },
+          temperature: { $avg: '$temperature' },
+          humidityA: { $avg: '$humidityA' },
+          humidityS: { $avg: '$humidityS' },
+          luminosity: { $avg: '$luminosity' },
+        },
+      },
+    ]);
+    return result;
   }
 
   create(createClimatDto: CreateClimatDto) {

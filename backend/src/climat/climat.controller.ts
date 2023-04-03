@@ -17,6 +17,11 @@ export class ClimatController {
     return this.climatService.findAll();
   }
 
+  @Get('moyenne')
+  findMoy() {
+    return this.climatService.aggregateValues();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.climatService.findOne(id);
