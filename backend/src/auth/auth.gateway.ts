@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import {
   ConnectedSocket,
   MessageBody,
@@ -17,7 +18,7 @@ import { serialService } from '../serial/serial.service';
   namespace: 'auth',
 })
 export class AuthGateway implements OnGatewayConnection, OnGatewayDisconnect {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
 
   private port = serialService.getPort();
 
@@ -33,7 +34,7 @@ export class AuthGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @ConnectedSocket() client: Socket,
     @MessageBody() payload: string,
   ): any {
-    serialService.writeToPort('1');
+    serialService.writeToPort('1' );
   }
 
   @SubscribeMessage('arrosage_off')
@@ -100,9 +101,12 @@ export class AuthGateway implements OnGatewayConnection, OnGatewayDisconnect {
     this.parser.on('data', (data) => {
       const values = data.split('/');
       const rfid = values[7];
-      this.authService.loginRfid({ rfId: rfid }).then((res) => {
-        client.emit('auth', res);
-      });
+      
+      if(rfid){
+        this.authService.loginRfid({ rfId: rfid }).then((res) => {
+          client.emit('auth', res);
+        });
+      }
     });
   }
 

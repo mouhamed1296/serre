@@ -137,20 +137,20 @@ void loop() {
     // sinon si c'est un caractère elle concerne le moteur qui gère le toit
     if (isdigit(data)) {
       relayState = (data == '0') ? true : false; // convertir le nombre en booolen
-      //digitalWrite(POMPEPIN, relayState ? HIGH : LOW); // on ou off la pompe en se basant sur la valeur boolen
+      digitalWrite(POMPEPIN, relayState ? HIGH : LOW); // on ou off la pompe en se basant sur la valeur boolen
     } else if (isAlpha(data)) {
       motorState = (data == 'o') ? true : false; // convertir la chaine en booolen
-      //digitalWrite(MOTORPIN, motorState ? HIGH : LOW); // on ou off le moteur qui gère le toit en se basant sur la valeur boolen
+      digitalWrite(MOTORPIN, motorState ? HIGH : LOW); // on ou off le moteur qui gère le toit en se basant sur la valeur boolen
     }
-  } else {
+  } /*else {
     //Arrosage automatique
     //relayState = valueSol > 100 ? false : true;
     // Ouverture du toit automatique
     //motorState = valuePR > 100 ? false : true;
-  }
+  }*/
    
-  digitalWrite(POMPEPIN, relayState ? HIGH : LOW); // on ou off la pompe en se basant sur la valeur boolen
-  digitalWrite(MOTORPIN, motorState ? HIGH : LOW); // on ou off le moteur qui gère le toit en se basant sur la valeur boolen
+  //digitalWrite(POMPEPIN, relayState ? HIGH : LOW); // on ou off la pompe en se basant sur la valeur boolen
+  //digitalWrite(MOTORPIN, motorState ? HIGH : LOW); // on ou off le moteur qui gère le toit en se basant sur la valeur boolen
 /* Réception des commandes envoyés depuis l'app Fin */
 
   fanState = temp > 30 ? true : false;// Etat de l'extracteur d'air
