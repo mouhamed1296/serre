@@ -9,75 +9,55 @@ import {
 } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
 import { Server } from 'ws';
-import { SerialPort } from 'serialport';
-import { ReadlineParser } from '@serialport/parser-readline';
 import { AuthService } from './auth.service';
+import { serialService } from '../serial/serial.service';
 
 @WebSocketGateway({
   cors: true,
   namespace: 'auth',
 })
 export class AuthGateway implements OnGatewayConnection, OnGatewayDisconnect {
-  /* private port = new SerialPort({
-    path: 'COM10',
-    baudRate: 9600,
-    dataBits: 8,
-    parity: 'none',
-    stopBits: 1,
-    //autoOpen: true,
-    //flowControl: false,
-  });
-
-  port.open((err) => {
-  if (err) {
-    client.emit('error_systeme', err.message);
-    return console.log('Error opening port: ', err.message);
-  } else {
-  client.emit('systeme_on', 'Port ouvert');
-}
-});
-
-private parser: = port.pipe(new ReadlineParser({ delimiter: '\r\n' }));*/
-
   constructor(private readonly authService: AuthService) {}
 
-/*   private port = new SerialPort({
-    path: '/dev/ttyACM1',
-    baudRate: 9600,
-    dataBits: 8,
-    parity: 'none',
-    stopBits: 1,
-    autoOpen: false,
-  });
-  }); */
+  private port = serialService.getPort();
 
-  //private parser = this.port.pipe(new ReadlineParser({ delimiter: '\r\n' }));
+  private parser = serialService.getParser();
 
   @WebSocketServer()
   public server: Server;
 
   public socket: Socket;
 
-  @SubscribeMessage('message')
-  handleMessage(
-    @ConnectedSocket() client: Socket,
-    @MessageBody() payload: string,
-  ): string {
-    console.log('message', payload);
-    return payload;
-  }
-
-  @SubscribeMessage('open_port')
-  handleOpenPort(
+  @SubscribeMessage('arrosage_on')
+  handleArrosageOn(
     @ConnectedSocket() client: Socket,
     @MessageBody() payload: string,
   ): any {
-    /* this.port.open((err) => {
-      if (err.message !== 'Port is already open') {
-        client.emit('error_systeme', err.message);
-        return console.log('Error opening port: ', err.message);
-      }
-    }); */
+    serialService.writeToPort('1');
+  }
+
+  @SubscribeMessage('arrosage_off')
+  handleArrosageOff(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() payload: string,
+  ): any {
+    serialService.writeToPort('0');
+  }
+
+  @SubscribeMessage('toit_ouvert')
+  handleToitOn(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() payload: string,
+  ): any {
+    serialService.writeToPort('o');
+  }
+
+  @SubscribeMessage('toit_ferme')
+  handleToitOff(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() payload: string,
+  ): any {
+    serialService.writeToPort('f');
   }
 
   @SubscribeMessage('port_status')
@@ -85,28 +65,45 @@ private parser: = port.pipe(new ReadlineParser({ delimiter: '\r\n' }));*/
     @ConnectedSocket() client: Socket,
     @MessageBody() payload: string,
   ): any {
-/*     if (this.port.isOpen) {
+    if (this.port.isOpen) {
       client.emit('systeme_on', 'Port ouvert');
     } else {
       client.emit('systeme_off', 'Port fermé');
-    } */
+    }
   }
 
   handleConnection(@ConnectedSocket() client: Socket, ...args: any[]): any {
     client.emit('hello', 'Hello client!');
-    //client.join('room');
-    /* this.parser.on('data', (data) => {
-      //client.emit('data', data);
-      this.authService.loginRfid({ rfId: data }).then((res) => {
+    this.parser.on('data', (data) => {
+      const values = data.split('/');
+      const pompe = parseFloat(values[4]);
+      const toit = parseFloat(values[5]);
+      const fan = parseFloat(values[6]);
+
+      client.emit('pompe_status', pompe);
+      client.emit('toit_status', toit);
+      client.emit('fan_status', fan);
+    });
+    if (!this.port.isOpen) {
+      setInterval(() => {
+        this.port.open((err) => {
+          if (err && err.message !== 'Port is already open') {
+            client.emit('error_systeme', err.message);
+            return console.log('Error opening port: ', err.message);
+          } else {
+            client.emit('systeme_on', 'Port ouvert');
+          }
+        });
+      }, 1000);
+    }
+
+    this.parser.on('data', (data) => {
+      const values = data.split('/');
+      const rfid = values[7];
+      this.authService.loginRfid({ rfId: rfid }).then((res) => {
         client.emit('auth', res);
       });
-    }); */
-
-    // Send message to all clients in the room
-    //client.to('room').emit('message', 'Hello everyone!');
-
-    // Send message to all clients in the room except the sender
-    //client.to('room').emit('message', 'Hello everyone except sender!');
+    });
   }
 
   handleDisconnect(@ConnectedSocket() client: any): any {

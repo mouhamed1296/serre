@@ -5,33 +5,112 @@ import arroseur1 from '../../assets/arr.jpeg'
 import arroseur2 from '../../assets/arr-gif.gif'
 import toitFerme from '../../assets/toit_ferme.jpg'
 import toitOuvert from '../../assets/toit_ouvert.webp'
+import DHT11 from '../../assets/dht11.jpeg'
 import {useEffect, useState} from 'react'
 import useSocketIO from "../../hooks/useSocketIO";
 
 function CtrlSysteme() {
     const socketUrl = 'ws://localhost:3000/auth';
+    const socketUrl1 = 'ws://localhost:3000/climat';
+    const socket1 = useSocketIO(socketUrl1);
     const { connected, socket, listenMessage, sendMessage } = useSocketIO(socketUrl);
-    const [toggle, setToggle] = useState(false);
     const [arduinoConnected, setArduinoConnected] = useState(false);
+    const [dhtConnected, setDHTConnected] = useState(false);
+    const [toggleFan, setToggleFan] = useState(localStorage.getItem('toggleFan') === 'true'
+        && localStorage.getItem('isFirstEvent') === 'true');
+    const [toggle, setToggle] = useState(localStorage.getItem('toggle') === 'true'
+        && localStorage.getItem('isFirstEvent') === 'true');
+    const [toggle2, setToggle2] = useState(localStorage.getItem('toggle2') === 'true'
+        && localStorage.getItem('isFirstEvent') === 'true');
 
     useEffect(() => {
         listenMessage('error_systeme', (message) => {
             console.log('message', message)
         })
+        socket1.listenMessage('data', (data) => {
+            if (data.temperature === 0) {
+                setDHTConnected(false);
+            } else {
+                setDHTConnected(true);
+            }
+        })
         listenMessage('systeme_on', (message) => {
             setArduinoConnected(true);
-            console.log('message', message)
+            localStorage.setItem('isFirstEvent', String(true));
+           // console.log('message', message)
+        })
+        listenMessage('systeme_off', (message) => {
+            let isFirstEvent = localStorage.getItem('isFirstEvent') !== 'false';
+            if (isFirstEvent) {
+                setArduinoConnected(false);
+                isFirstEvent = false; // Set the flag to false, so we don't reload the page again
+                localStorage.setItem('isFirstEvent', String(false)); // Store the flag in local storage
+                location.reload(); // Reload the page
+                //console.log('message', message);
+            }
         })
     }, [listenMessage]);
 
     useEffect(() => {
-        sendMessage('port_status', {message: 'systeme_on'})
+        listenMessage('pompe_status', (message) => {
+            if(message === 1) {
+                localStorage.setItem('toggle', String(true));
+                setToggle(true);
+            } else {
+                localStorage.setItem('toggle', String(false));
+                setToggle(false);
+            }
+        })
+        listenMessage('toit_status', (message) => {
+            if(message === 1) {
+                localStorage.setItem('toggle2', String(true));
+                setToggle2(true);
+            } else {
+                localStorage.setItem('toggle2', String(false));
+                setToggle2(false);
+            }
+        })
+        listenMessage('fan_status', (message) => {
+            if(message === 1) {
+                localStorage.setItem('toggleFan', String(true));
+                setToggleFan(true);
+            } else {
+                localStorage.setItem('toggleFan', String(false));
+                setToggleFan(false);
+            }
+        })
+
+    },[toggle, toggle2, toggleFan, arduinoConnected]);
+
+    useEffect(() => {
+        if(!arduinoConnected){
+            setInterval(() => {
+                sendMessage('port_status', {message: 'systeme_status'});
+            }, 1000);
+        }
     }
-    , [sendMessage]);
+    , [sendMessage, arduinoConnected]);
+
+    useEffect(() => {
+        if(toggle) {
+            sendMessage('arrosage_on', 1);
+        } else {
+            sendMessage('arrosage_off', 0);
+        }
+
+    }, [sendMessage, toggle]);
+    useEffect(() => {
+        if(toggle2) {
+            sendMessage('toit_ouvert', 'o');
+        } else {
+            sendMessage('toit_ferme', 'f');
+        }
+
+    }, [sendMessage, toggle2]);
     const handleClick = () => {
         setToggle(!toggle)
     };
-    const [toggle2, setToggle2] = useState(false);
+
     const handleClick2 = () => {
         setToggle2(!toggle2)
     };
@@ -123,11 +202,11 @@ function CtrlSysteme() {
             </div>
             <div className='rounded-lg drop-shadow-lg w-1/3'>
                 <div className='bg-white w-full h-3/5 rounded-lg drop-shadow-lg flex justify-center'>
-                    <img src={extracteur1} alt="" />
+                    <img src={toggleFan ? extracteur2 : extracteur1} alt="" />
                 </div>
                 <div className='bg-white w-full mt-6 h-2/6 rounded-lg drop-shadow-lg'>
                     <p className='text-emerald-600 text-center text-2xl font-medium m-0'>Etats des capteurs</p>
-                    <div className='flex justify-center items-center pt-2 gap-2'>
+                    <div className='flex flex-col justify-center items-center pt-2 gap-2'>
                         {!arduinoConnected ?
                             <>
                                 <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
@@ -147,6 +226,18 @@ function CtrlSysteme() {
                             </>
                             :
                             <p className='text-green-600 text-center text-xl font-medium m-0'>Arduino connecté</p>
+                        }
+                        {
+                            arduinoConnected && !dhtConnected ?
+                                <div className='flex'>
+                                    <img className='w-8 h-12' src={DHT11} alt='DHT11'/>
+                                    <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+                                         width="20" height="20"
+                                         viewBox="0 0 48 48">
+                                        <linearGradient id="wRKXFJsqHCxLE9yyOYHkza_fYgQxDaH069W_gr1" x1="9.858" x2="38.142" y1="9.858" y2="38.142" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#f44f5a"></stop><stop offset=".443" stop-color="#ee3d4a"></stop><stop offset="1" stop-color="#e52030"></stop></linearGradient><path fill="url(#wRKXFJsqHCxLE9yyOYHkza_fYgQxDaH069W_gr1)" d="M44,24c0,11.045-8.955,20-20,20S4,35.045,4,24S12.955,4,24,4S44,12.955,44,24z"></path><path d="M33.192,28.95L28.243,24l4.95-4.95c0.781-0.781,0.781-2.047,0-2.828l-1.414-1.414	c-0.781-0.781-2.047-0.781-2.828,0L24,19.757l-4.95-4.95c-0.781-0.781-2.047-0.781-2.828,0l-1.414,1.414	c-0.781,0.781-0.781,2.047,0,2.828l4.95,4.95l-4.95,4.95c-0.781,0.781-0.781,2.047,0,2.828l1.414,1.414	c0.781,0.781,2.047,0.781,2.828,0l4.95-4.95l4.95,4.95c0.781,0.781,2.047,0.781,2.828,0l1.414-1.414	C33.973,30.997,33.973,29.731,33.192,28.95z" opacity=".05"></path><path d="M32.839,29.303L27.536,24l5.303-5.303c0.586-0.586,0.586-1.536,0-2.121l-1.414-1.414	c-0.586-0.586-1.536-0.586-2.121,0L24,20.464l-5.303-5.303c-0.586-0.586-1.536-0.586-2.121,0l-1.414,1.414	c-0.586,0.586-0.586,1.536,0,2.121L20.464,24l-5.303,5.303c-0.586,0.586-0.586,1.536,0,2.121l1.414,1.414	c0.586,0.586,1.536,0.586,2.121,0L24,27.536l5.303,5.303c0.586,0.586,1.536,0.586,2.121,0l1.414-1.414	C33.425,30.839,33.425,29.889,32.839,29.303z" opacity=".07"></path><path fill="#fff" d="M31.071,15.515l1.414,1.414c0.391,0.391,0.391,1.024,0,1.414L18.343,32.485	c-0.391,0.391-1.024,0.391-1.414,0l-1.414-1.414c-0.391-0.391-0.391-1.024,0-1.414l14.142-14.142	C30.047,15.124,30.681,15.124,31.071,15.515z"></path><path fill="#fff" d="M32.485,31.071l-1.414,1.414c-0.391,0.391-1.024,0.391-1.414,0L15.515,18.343	c-0.391-0.391-0.391-1.024,0-1.414l1.414-1.414c0.391-0.391,1.024-0.391,1.414,0l14.142,14.142	C32.876,30.047,32.876,30.681,32.485,31.071z"></path>
+                                    </svg>
+                                </div>
+                            : ''
                         }
                     </div>
                 </div>

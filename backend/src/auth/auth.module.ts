@@ -6,6 +6,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './jwtStrategy';
 import { AuthGateway } from './auth.gateway';
+import {SerialService} from "../serial/serial.service";
 
 @Module({
   controllers: [AuthController],
@@ -17,6 +18,6 @@ import { AuthGateway } from './auth.gateway';
       signOptions: { expiresIn: '86400s' },
     }),
   ],
-  providers: [AuthService, JwtStrategy, AuthGateway],
+  providers: [AuthService, JwtStrategy, AuthGateway, SerialService],
 })
 export class AuthModule {}
