@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { ClimatService } from './climat.service';
 import { CreateClimatDto } from './dto/create-climat.dto';
@@ -6,7 +7,6 @@ import { CreateClimatDto } from './dto/create-climat.dto';
 export class ClimatController {
   constructor(private readonly climatService: ClimatService) {}
 
-  
   @Post()
   create(@Body() createClimatDto: CreateClimatDto) {
     return this.climatService.create(createClimatDto);
@@ -26,5 +26,4 @@ export class ClimatController {
   findOne(@Param('id') id: string) {
     return this.climatService.findOne(id);
   }
-
 }
