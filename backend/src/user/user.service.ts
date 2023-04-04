@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConsoleLogger, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserRepository } from './user.repository';
@@ -6,6 +6,7 @@ import { LoginUserDto } from './dto/login-user.dto';
 import * as bcrypt from 'bcrypt';
 import { IncorrectCredentialsException } from './exceptions/incorrectCredentials.exception';
 import { UserNotFoundException } from './exceptions/userNotFound.exception';
+import { RfidDto } from './dto/rfid-user.dto';
 
 //Service pour les utilisateurs chargé de gérer les requêtes
 //à la base de donnée
@@ -18,6 +19,7 @@ export class UserService {
   //Injection du modèle au niveau du constructeur de user service
   //la variable userModel ainsi créer nous permet de communiquer
   //avec la base de donnée
+  private logger: ConsoleLogger = new ConsoleLogger();
   constructor(private userRepository: UserRepository) {}
 
   saltOrRounds = 10;
@@ -42,8 +44,34 @@ export class UserService {
   }
 
   //Modification d'un utilisateur
-  update(id: string, updateUserDto: UpdateUserDto) {
-    return this.userRepository.findOneAndUpdate({ _id: id }, updateUserDto);
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    const user = await this.userRepository.findOne({ email: id });
+    //Verifier si l'utilisateur existe
+    if (!user) {
+      throw new UserNotFoundException('Erreur lors de la modification');
+    }
+    //Verifier si l'utilisateur a entré un mot de passe correct
+    const isPasswordCorrect = await bcrypt.compare(
+      updateUserDto.password,
+      user.password,
+    );
+    if (!isPasswordCorrect) {
+      throw new IncorrectCredentialsException('Ancien mot de passe incorrect');
+    }
+    updateUserDto.newPassword = await bcrypt.hash(
+      updateUserDto.newPassword,
+      this.saltOrRounds,
+    );
+    const newUser = await this.userRepository.findOneAndUpdate(
+      { email: id },
+      { password: updateUserDto.newPassword },
+    );
+
+    if (!newUser) {
+      throw new UserNotFoundException('Erreur lors de la modification');
+    }
+
+    return { status: 200, message: 'Mot de passe modifié avec succès' };
   }
 
   remove(id: number) {
@@ -67,6 +95,27 @@ export class UserService {
     if (!isPasswordCorrect) {
       throw new IncorrectCredentialsException();
     }
+    //connexion réussie
+    return {
+      email: user.email,
+      id: user._id,
+      nom: user.nom,
+      prenom: user.prenom,
+    };
+  }
+
+  async loginRfid(rfidDto: RfidDto) {
+    const user = await this.userRepository.findOne({ rfId: rfidDto.rfId });
+    //Verifier si l'utilisateur existe
+    if (!user) {
+      //throw new BadRfidCardException();
+      return {
+        error: true,
+        message: 'Accés non autorisé',
+        code: 400,
+      };
+    }
+
     //connexion réussie
     return {
       email: user.email,

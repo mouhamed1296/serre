@@ -6,10 +6,16 @@ export class Climat {
     temperature: number;
 
     @Prop()
-    humidity: number;
+    humidityA: number;
+
+    @Prop()
+    humidityS: number;
 
     @Prop()
     luminosity: number;
+
+    @Prop({ default: Date.now })
+    savedAt: Date;
 }
 
 export type ClimatDocument = Climat & Document;

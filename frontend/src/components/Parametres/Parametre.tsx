@@ -104,6 +104,7 @@ function Parametre() {
                         <span className='text-red-600 ml-80 text-sm'>Format incorrect</span>
                     }
                 </div>
+<<<<<<< HEAD
                 <div className='w-full'>
                     <div className='flex flex-row w-full justify-center'>
                         <label htmlFor='heure' className='w-2/6 mt-2 text-xl'>Heures d'arrosage</label>
@@ -129,6 +130,23 @@ function Parametre() {
                     {errors.heure?.type === "pattern" &&
                         <span className='text-red-600 ml-80 text-sm'>Format incorrect</span>
                     }
+=======
+                {errors.nombre?.type === "required" && 
+                    <span className='text-red-600 ml-80 text-sm'>Ce champ est Obligatoire</span>
+                }
+                {errors.nombre?.type === "pattern" && 
+                    <span className='text-red-600 ml-80 text-sm'>Format incorrect</span>
+                }
+            </div>
+            <div className='w-full'>
+                <div className='flex flex-row w-full justify-center'>
+                    <label htmlFor='heure' className='w-2/6 mt-2 text-xl'>Heures d'arrosage</label>
+                    <input {...register("heure", {  required: true, pattern: /^[0-23]+h\/[0-23]+h\/[0-23]+h$/})} 
+                    type="text" name='heure' className='w-1/2 h-12 ml-8 border border-gray-200 rounded'
+                    value={heure}
+                    onChange={(e) => setHeure(e.target.value)}
+                    placeholder = 'ex. 10h/15h/19h'/>
+>>>>>>> dev
                 </div>
                 <button onClick={onSubmit} type='submit' className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded ml-auto mr-11">
                     Sauvegarder

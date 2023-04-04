@@ -4,11 +4,11 @@ import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-
 import { AuthModule } from './auth/auth.module';
-
 import { PlantesModule } from './plantes/plantes.module';
 import { ClimatModule } from './climat/climat.module';
+import { SerialService } from './serial/serial.service';
+
 
 @Module({
   imports: [
@@ -29,6 +29,6 @@ import { ClimatModule } from './climat/climat.module';
     PlantesModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, SerialService],
 })
 export class AppModule {}
