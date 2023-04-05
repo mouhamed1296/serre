@@ -11,7 +11,7 @@ function Parametre() {
     let [idPlante, setIdPlante] = useState<string>("");
     let [show, setShow] = useState<boolean>(false);
 
-    /* Récupération des plantes de l'utilisateur */
+    /* Récupération des plantes */
     const { isLoading, error, data:plantes } = useQuery<Plante[], Error>({
         queryKey: ['plantes'],
         queryFn: () =>
