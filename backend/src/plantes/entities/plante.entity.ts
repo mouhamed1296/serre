@@ -4,13 +4,16 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 export class Plante {
   
     @Prop()
-    nomPlante: string;
+    plante: string;
 
     @Prop()
-    nombreArrosage: string;
+    nombre: string;
 
     @Prop()
-    heureArrosage: string;
+    heure: string;
+
+    @Prop({ default: false})
+    etat: boolean;
 }
 
 

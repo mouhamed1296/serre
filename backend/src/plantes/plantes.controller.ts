@@ -26,9 +26,4 @@ export class PlantesController {
   update(@Param('id') id: string, @Body() updatePlanteDto: UpdatePlanteDto) {
     return this.plantesService.update(id, updatePlanteDto);
   }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.plantesService.remove(+id);
-  }
 }

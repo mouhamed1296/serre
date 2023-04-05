@@ -1,10 +1,6 @@
 import { useState } from 'react'
 import Success from './Success'
 
-import Sucess from './Success'
-import { data } from './test'
-
-
 const Modal = ({ show, setShow, data }: { show: boolean, setShow: any, data: any }) => {
   const [showM, setShowM] = useState<boolean>(false)
   const [showM1, setShowM1] = useState<boolean>(false)
