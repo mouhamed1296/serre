@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -8,16 +9,18 @@ import { Plante, PlanteDocument } from './entities/plante.entity';
 @Injectable()
 export class PlantesService {
   constructor(
-    @InjectModel(Plante.name) private PlanteModel: Model<PlanteDocument>){}
-/*   create(createPlanteDto: CreatePlanteDto) {
+    @InjectModel(Plante.name) private PlanteModel: Model<PlanteDocument>,
+  ) {}
+  /*   create(createPlanteDto: CreatePlanteDto) {
     return 'This action adds a new plante';
   } */
 
-    //Creation d'une plante
-    create(CreatePlanteDto: CreatePlanteDto) {
-      const newPlante = new this.PlanteModel(CreatePlanteDto);
-      return newPlante.save();
-    }
+  // eslint-disable-next-line prettier/prettier
+  //Creation d'une plante
+  create(CreatePlanteDto: CreatePlanteDto) {
+    const newPlante = new this.PlanteModel(CreatePlanteDto);
+    return newPlante.save();
+  }
   //Récupération de tout les utilisateurs
   findAll() {
     return this.PlanteModel.find({});
