@@ -2,6 +2,13 @@
 #include <Keypad.h>
 #include <SPI.h>
 #include <MFRC522.h>
+#include "LiquidCrystal_I2C.h"
+#include <Servo.h>
+#include <Stepper.h>
+
+Servo myservo;
+
+LiquidCrystal_I2C lcd(0x27,16,2); // définit le type d'écran lcd 16 x 2
  
 //Déclaration des PINS
 #define SS_PIN 53
@@ -20,6 +27,7 @@ boolean motorState = false; // permet de controller le moteur qui ouvre le toit
 boolean fanState = false; // permet de connaitre l'etat de l'extracteur d'air
 const byte ROWS= 4; //nombre de ligne du keypad
 const byte COLS= 4; //nombre de colonne du keypad
+const int stepsPerRevolution = 2048; // Définit le nombre de pas par rotation:
 
 //Représentation du keypad
 char keymap[ROWS][COLS]=
@@ -32,13 +40,18 @@ char keymap[ROWS][COLS]=
 
 byte rowPins[ROWS] = {9,8,7,6}; //PINS pour les ligne
 byte colPins[COLS] = {5,4,3,2}; //PINS pour les colonnes
-const char secretCode[] = "1234"; // definition du mot de passe
+/*const char secretCode[] = "1234"; // definition du mot de passe
 const int maxAttempts = 4; // definition du nombre maximum de tentatives
-int attempts = 0; // initialisation du nombre de tentatives à zero
+int attempts = 0; // initialisation du nombre de tentatives à zero*/
+
+const int CORRECT_CODE = 1234; // the correct access code
+const int MAX_ATTEMPTS = 3; // maximum number of attempts allowed
+int numAttempts = 0; // current number of attempts
 
 DHT dht(DHTPIN, DHTTYPE);
 Keypad keypad = Keypad(makeKeymap(keymap), rowPins, colPins, ROWS, COLS);
 MFRC522 mfrc522(SS_PIN, RST_PIN);
+Stepper myStepper = Stepper ( stepsPerRevolution, 8, 10, 9, 11 ) ;
 
 
 void setup() {
@@ -47,6 +60,13 @@ void setup() {
   dht.begin();
   SPI.begin();      // Initialise  SPI bus
   mfrc522.PCD_Init();   // Initialise MFRC522
+  myStepper.setSpeed ( 5 ) ;
+
+  lcd.init(); // initialize the LCD
+  lcd.backlight(); // turn on the backlight
+  lcd.display();
+  lcd.setCursor(0,0);
+  lcd.print("Appuie #:");
 
   pinMode(PRPIN, INPUT);
   pinMode(solPIN, INPUT);
@@ -54,9 +74,11 @@ void setup() {
   pinMode(MOTORPIN, OUTPUT);
 
   digitalWrite(POMPEPIN, 1);
+  myservo.attach(SERVOPIN);
 }
 
 void loop() {
+
   //Récupération des données fournies par les capteurs
   char key = keypad.getKey();
   int temp = dht.readTemperature();
@@ -96,33 +118,74 @@ void loop() {
 
   /*Gestion de l'acces avec le KEYPAD Début*/
 
-  if (key) { // Vérifie si une touche a été pressé
-    Serial.print("Key pressed: ");
-    Serial.println(key);
-    if (key == '#') { // si # est la touche pressé l'utilisateur peut entrer son code
-      if (attempts >= maxAttempts) { // Si le maximum de tentative est atteint
-        Serial.println("Maximum de tentatives atteint réessayer dans 2 secondes.");
-        delay(2000);
-        attempts = 0; //reset du nombre de tentatives
-      } else {
-        char enteredCode[5] = ""; // initialise le mot de passe entré en un chaine vide
-        int i = 0;
-        while (i < 4) { // Autorise l'utilisateur à entrer 4 caractère
-          char key = keypad.getKey();
-          if (key) {
-            enteredCode[i++] = key;
-            Serial.print(key);
-            delay(100);
-          }
+  static bool waitingForCode = true; // flag indicating whether to wait for the access code or not
+  static char code[5]; // stores the entered code
+  static int codeIndex = 0; // the current index in the code array
+  boolean isCorrect = false;
+  
+  if (waitingForCode) {
+    char key = keypad.getKey(); // read the keypad
+    
+    if (key == '#') { // if the '#' key is pressed
+      waitingForCode = false; // set the flag to indicate that the access code is being entered
+      lcd.clear(); // clear the LCD
+      lcd.setCursor(0, 0); // set the cursor to the first column of the first row
+      lcd.print("Entrer Code:"); // print initial message on LCD
+    }
+  }
+  else {
+    while(numAttempts < 3 && !isCorrect) {
+      char key = keypad.getKey(); // read the keypad
+    
+      if (key != NO_KEY && codeIndex < 4) { // if a key is pressed and the code is not complete
+        lcd.print("*"); // print a '*' on the LCD
+        code[codeIndex] = key; // add the key to the code array
+        codeIndex++; // move to the next index
+      }
+      
+      if (codeIndex == 4) { // if the code is complete
+        int enteredCode = atoi(code); // convert the code to an integer
+        codeIndex = 0; // reset the code index
+        lcd.clear(); // clear the LCD
+        
+        if (enteredCode == CORRECT_CODE) { // if the correct code is entered
+          lcd.print("Acces Autorise"); // print message on LCD
+          myservo.write(90);
+          delay(300);
+          myservo.write(180);
+          delay(300);
+          myservo.write(0);
+          delay(300);
+          delay(2000); // wait for 2 seconds
+          lcd.clear(); // clear the LCD
+          lcd.setCursor(0, 0); // set the cursor to the first column of the first row
+          lcd.print("Appuie #:"); // print message on LCD
+          numAttempts = 0; // reset number of attempts
+          break;
         }
-        Serial.println();
-        if (strcmp(enteredCode, secretCode) == 0) { // Si le mot de passe entré est correct
-          delay(2000);
-          attempts = 0; // reset du nombre de tentatives
-        } else { // Si le code entré est incorrect
-          Serial.println("Access refusé. Réessayer SVP.");
-          delay(2000);
-          attempts++; // incrémenter le nombre de tentatives
+        else {
+          numAttempts++; // increment number of attempts
+          
+          if (numAttempts >= MAX_ATTEMPTS) { // if
+            lcd.print("Acces Refuse"); // print message on LCD
+            delay(2000); // wait for 2 seconds
+            lcd.clear(); // clear the LCD
+            lcd.setCursor(0, 0); // set the cursor to the first column of the first row
+            lcd.print("Tentative Epuise"); // print message on LCD
+            delay(2000); // wait for 2 seconds
+            lcd.clear(); // clear the LCD
+            lcd.setCursor(0, 0); // set the cursor to the first column of the first row
+            lcd.print("Appuie #:"); // print message on LCD
+            numAttempts = 0; // reset number of attempts
+            break;
+          }
+          else { // if the number of attempts is less than the maximum
+            lcd.print("Acces Refuse"); // print message on LCD
+            delay(2000); // wait for 2 seconds
+            lcd.clear(); // clear the LCD
+            lcd.setCursor(0, 0); // set the cursor to the first column of the first row
+            lcd.print("Entrer Code:"); // print message on LCD
+          }
         }
       }
     }
@@ -141,6 +204,11 @@ void loop() {
     } else if (isAlpha(data)) {
       motorState = (data == 'o') ? true : false; // convertir la chaine en booolen
       digitalWrite(MOTORPIN, motorState ? HIGH : LOW); // on ou off le moteur qui gère le toit en se basant sur la valeur boolen
+      if (motorState) {
+        myStepper.step(stepsPerRevolution);
+      } else {
+        myStepper.step(-stepsPerRevolution);
+      }
     }
   } /*else {
     //Arrosage automatique
