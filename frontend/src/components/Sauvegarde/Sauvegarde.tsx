@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import Modal from './Modal'
-import Sucess from './Success'
 import { data } from './test'
 
 
