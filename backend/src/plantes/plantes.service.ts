@@ -11,17 +11,13 @@ export class PlantesService {
   constructor(
     @InjectModel(Plante.name) private PlanteModel: Model<PlanteDocument>,
   ) {}
-  /*   create(createPlanteDto: CreatePlanteDto) {
-    return 'This action adds a new plante';
-  } */
 
-  // eslint-disable-next-line prettier/prettier
   //Creation d'une plante
   create(CreatePlanteDto: CreatePlanteDto) {
     const newPlante = new this.PlanteModel(CreatePlanteDto);
     return newPlante.save();
   }
-  //Récupération de tout les utilisateurs
+  //Récupération de tout les plantes
   findAll() {
     return this.PlanteModel.find({});
   }
@@ -34,7 +30,4 @@ export class PlantesService {
     return this.PlanteModel.findOneAndUpdate({ _id: id }, UpdatePlanteDto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} plante`;
-  }
 }

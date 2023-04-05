@@ -1,13 +1,51 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { Plante } from '../../fake_api/plante'
 import Success from './Success'
+import imgTomate from '../../assets/tomate.png'
+import imgAloevera from '../../assets/aloevera.png'
+import imgNana from '../../assets/nana.png'
 
-import Sucess from './Success'
-import { data } from './test'
-
-
-const Modal = ({ show, setShow, data }: { show: boolean, setShow: any, data: any }) => {
+const Modal = ({ show, setShow, data , plantes}: { show: boolean, setShow: any, data: Plante, plantes: Plante[] }) => {
   const [showM, setShowM] = useState<boolean>(false)
   const [showM1, setShowM1] = useState<boolean>(false)
+
+  const appliquer = () => {
+    plantes.forEach(plante => {
+      if (plante.nomPlante !== data.nomPlante) {
+        fetch('http://localhost:3000/plantes/' + plante._id, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + localStorage.getItem('token')
+          },
+          body: JSON.stringify({ "etat": false })
+        })
+          .then(res => res.json())
+          .then(data => {
+            console.log(data);
+          })
+      }
+    })
+    fetch('http://localhost:3000/plantes/' + data._id, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + localStorage.getItem('token')
+      },
+      body: JSON.stringify({ "etat": true})
+    })
+      .then(res => res.json())
+      .then(data => {
+        console.log(data);
+        setShowM1(true)
+        setTimeout(() => {
+          setShowM1(false)
+        }, 2000);
+        
+      })
+  }
+  console.log(data._id);
+
   return (
     <div className={`relative ${!show ? 'hidden' : ''} z-10`} aria-labelledby="modal-title" role="dialog" aria-modal="true">
       {/*  <!--
@@ -39,13 +77,15 @@ const Modal = ({ show, setShow, data }: { show: boolean, setShow: any, data: any
               <div className="sm:flex sm:items-start">
                 <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full flex flex-col gap-4 justify-center items-center">
                   <h3 className="text-base font-semibold leading-6 text-gray-900" id="modal-title">
-                    <img src={data.image} className="w-16 h-16" alt="" />
-                    <span>{data.plante}</span>
+                    { data.nomPlante === 'Tomate' && <img src={imgTomate} className="w-16 h-16" alt="" /> }
+                    { data.nomPlante === 'Nana' && <img src={imgNana} className="w-16 h-16" alt="" /> }
+                    { data.nomPlante === 'Aloe vera' && <img src={imgAloevera} className="w-16 h-16" alt="" /> }
+                    <span>{data.nomPlante}</span>
                   </h3>
                   <hr />
                   <div className="mt-2 flex flex-col gap-4 ">
                     <p className="text-sm text-gray-800">
-                      <span><span className="font-bold">Nombre d'arrosage:</span> {data.nbArrosage}</span>
+                      <span><span className="font-bold">Nombre d'arrosage:</span> {data.nombreArrosage}</span>
                     </p>
                     <p className="text-sm text-gray-800">
                       <span><span className="font-bold">Heure d'arrosage:</span> {data.heureArrosage}</span>
@@ -56,14 +96,8 @@ const Modal = ({ show, setShow, data }: { show: boolean, setShow: any, data: any
             </div>
             <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
               <button type="button" className="inline-flex w-full justify-center rounded-md bg-emerald-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500 sm:ml-3 sm:w-auto">{
-
-
-                <button onClick={(e) => {
-
-                  setShowM1(true)
-                  setTimeout(() => {
-                    setShowM1(false)
-                  }, 3000);
+                <button onClick={() => {
+                  appliquer()
                 }}>
                   Appliquer
                 </button>
