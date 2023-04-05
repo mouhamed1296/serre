@@ -191,7 +191,7 @@ void loop() {
     }
   }
   /*Gestion de l'acces avec le KEYPAD FIN*/
-
+cf
 /* Réception des commandes envoyés depuis l'app Début */
 
   if (Serial.available() > 0) { //Vérifier si des données sont disponible au niveau du serial port
@@ -204,11 +204,11 @@ void loop() {
     } else if (isAlpha(data)) {
       motorState = (data == 'o') ? true : false; // convertir la chaine en booolen
       digitalWrite(MOTORPIN, motorState ? HIGH : LOW); // on ou off le moteur qui gère le toit en se basant sur la valeur boolen
-      if (motorState) {
+      /*if (motorState) {
         myStepper.step(stepsPerRevolution);
       } else {
         myStepper.step(-stepsPerRevolution);
-      }
+      }*/
     }
   } /*else {
     //Arrosage automatique

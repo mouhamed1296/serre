@@ -77,6 +77,14 @@ export class AuthGateway implements OnGatewayConnection, OnGatewayDisconnect {
     client.emit('hello', 'Hello client!');
     this.parser.on('data', (data) => {
       const values = data.split('/');
+      const rfid = values[7];
+      
+      if(rfid){
+        this.authService.loginRfid({ rfId: rfid }).then((res) => {
+          client.emit('auth', res);
+        });
+      }
+      
       const pompe = parseFloat(values[4]);
       const toit = parseFloat(values[5]);
       const fan = parseFloat(values[6]);
@@ -97,17 +105,6 @@ export class AuthGateway implements OnGatewayConnection, OnGatewayDisconnect {
         });
       }, 1000);
     }
-
-    this.parser.on('data', (data) => {
-      const values = data.split('/');
-      const rfid = values[7];
-      
-      if(rfid){
-        this.authService.loginRfid({ rfId: rfid }).then((res) => {
-          client.emit('auth', res);
-        });
-      }
-    });
   }
 
   handleDisconnect(@ConnectedSocket() client: any): any {
