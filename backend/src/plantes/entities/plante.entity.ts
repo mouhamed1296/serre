@@ -13,7 +13,7 @@ export class Plante {
     @Prop()
     heureArrosage: string;
 
-    @Prop({ default: false})
+    @Prop()
     etat: boolean;
 }
 

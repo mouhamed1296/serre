@@ -11,11 +11,7 @@ export class PlantesService {
   constructor(
     @InjectModel(Plante.name) private PlanteModel: Model<PlanteDocument>,
   ) {}
-  /*   create(createPlanteDto: CreatePlanteDto) {
-    return 'This action adds a new plante';
-  } */
 
-  // eslint-disable-next-line prettier/prettier
   //Creation d'une plante
   create(CreatePlanteDto: CreatePlanteDto) {
     const newPlante = new this.PlanteModel(CreatePlanteDto);
