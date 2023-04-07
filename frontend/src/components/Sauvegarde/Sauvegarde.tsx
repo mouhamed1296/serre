@@ -18,11 +18,11 @@ const Sauvegarde = () => {
                 'Content-Type': 'application/json',
             }
         })
-        .then(res => res.json())
-        .then(data => {
-            setData(data);
-            console.log(data);
-        })
+            .then(res => res.json())
+            .then(data => {
+                setData(data);
+                console.log(data);
+            })
     }, [])
 
     return (
@@ -32,36 +32,34 @@ const Sauvegarde = () => {
                 {
                     data.map((d) =>
 
-                       <button value={d.nomPlante} onClick={(e) => {
-                            if(d.nomPlante == e.currentTarget.value) {
+                        <button value={d.nomPlante} onClick={(e) => {
+                            if (d.nomPlante == e.currentTarget.value) {
                                 setModalData(d)
                             }
                             setShow(true)
                         }}>
                             <div className='flex flex-col justify-center items-center bg-white px-8 py-2 shadow-md'>
-                            {d.etat === true &&
-                            <div className='w-25'>
-                                <div className='absolute ml-10'>
-                                <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
-                                width="40" height="40"
-                                viewBox="0 0 48 48">
-                                <path fill="#4CAF50" d="M37,5H11l-5,7v8v20c0,1.656,1.343,3,3,3h30c1.656,0,3-1.344,3-3V20v-8L37,5z"></path><path fill="#2E7D32" d="M12.029,7l-3.571,5H18c0,3.313,2.687,6,6,6s6-2.687,6-6h9.542l-3.571-5H12.029z"></path><path fill="#CCFF90" d="M30.826 21.754L22.934 29.656 19.17 25.898 17 28.076 22.938 34 33 23.926z"></path>
-                            </svg>
-                            </div>
-                            </div>
-                            }
+                                {d.etat === true &&
+                                    <div className='w-25'>
+                                        <div className='absolute ml-10'>
+                                            <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+                                                width="40" height="40"
+                                                viewBox="0 0 48 48">
+                                                <path fill="#4CAF50" d="M37,5H11l-5,7v8v20c0,1.656,1.343,3,3,3h30c1.656,0,3-1.344,3-3V20v-8L37,5z"></path><path fill="#2E7D32" d="M12.029,7l-3.571,5H18c0,3.313,2.687,6,6,6s6-2.687,6-6h9.542l-3.571-5H12.029z"></path><path fill="#CCFF90" d="M30.826 21.754L22.934 29.656 19.17 25.898 17 28.076 22.938 34 33 23.926z"></path>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                }
                                 {d.nomPlante === 'Aloe vera' && <img src={imgAloevera} className='w-24 h-24 mt-2' alt="" />}
                                 {d.nomPlante === 'Tomate' && <img src={imgTomate} className='w-24 h-24 mt-2' alt="" />}
                                 {d.nomPlante === 'Nana' && <img src={imgNana} className='w-24 h-24 mt-2' alt="" />}
                                 <span className='text-center mt-6 text-xl font-medium'>{d.nomPlante}</span>
                             </div>
-                       </button>
-
+                        </button>
                     )
                 }
             </div>
-                <Modal show={show} setShow={setShow} data={modalData} plantes={data} />
-                
+            <Modal show={show} setShow={setShow} data={modalData} plantes={data} />
         </div>
     )
 }

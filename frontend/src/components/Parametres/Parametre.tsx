@@ -116,7 +116,7 @@ function Parametre() {
                             type="text" name='heure' className='w-1/2 px-2 h-12 ml-8 border border-gray-200 rounded'
                             defaultValue={heure}
                             onChange={(e) => setHeure(e.target.value)}
-                            placeholder = 'ex. 10h/15h/19h'/>
+                            placeholder = 'ex. 10h/15h'/>
                         </div>
                         {errors.heure?.type === "required" && 
                         <span className='text-red-600 ml-80 text-sm'>Ce champ est Obligatoire</span>
