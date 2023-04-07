@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import { Climat } from "../../fake_api/historique";
+import { Climat } from "../../Models/historique";
 import NoResult from "./NoResult";
 import Pagination from "./Pagination";
 import HistoryItem from "./HistoryItem";
