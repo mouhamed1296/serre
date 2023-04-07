@@ -10,6 +10,7 @@ const Sauvegarde = () => {
     const [modalData, setModalData] = useState({} as Plante)
 
     const [data, setData] = useState<Plante[]>([]);
+    const [refreshData, setRefreshData] = useState<boolean>(false)
 
     useEffect(() => {
         fetch('http://localhost:3000/plantes', {
@@ -21,9 +22,10 @@ const Sauvegarde = () => {
         .then(res => res.json())
         .then(data => {
             setData(data);
+            setRefreshData(false);
             console.log(data);
         })
-    }, [])
+    }, [refreshData])
 
     return (
         <div className="justify-center drop-shadow-lg m-auto w-full h-96 rounded-lg border bg-white">
@@ -43,7 +45,7 @@ const Sauvegarde = () => {
                             <div className='w-25'>
                                 <div className='absolute ml-10'>
                                 <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
-                                width="40" height="40"
+                                width="30" height="30"
                                 viewBox="0 0 48 48">
                                 <path fill="#4CAF50" d="M37,5H11l-5,7v8v20c0,1.656,1.343,3,3,3h30c1.656,0,3-1.344,3-3V20v-8L37,5z"></path><path fill="#2E7D32" d="M12.029,7l-3.571,5H18c0,3.313,2.687,6,6,6s6-2.687,6-6h9.542l-3.571-5H12.029z"></path><path fill="#CCFF90" d="M30.826 21.754L22.934 29.656 19.17 25.898 17 28.076 22.938 34 33 23.926z"></path>
                             </svg>
@@ -60,7 +62,13 @@ const Sauvegarde = () => {
                     )
                 }
             </div>
-                <Modal show={show} setShow={setShow} data={modalData} plantes={data} />
+                <Modal 
+                    show={show}
+                    setShow={setShow}
+                    data={modalData}
+                    plantes={data}
+                    setRefreshData={setRefreshData}
+                />
                 
         </div>
     )

@@ -26,6 +26,10 @@ export class PlantesService {
     return this.PlanteModel.findOne({ _id: id }).exec();
   }
 
+  findActive() {
+    return this.PlanteModel.find({ etat: true }).exec();
+  }
+
   update(id: string, UpdatePlanteDto: UpdatePlanteDto) {
     return this.PlanteModel.findOneAndUpdate({ _id: id }, UpdatePlanteDto);
   }
