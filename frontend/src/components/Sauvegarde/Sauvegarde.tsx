@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import Modal from './Modal'
-import { Plante } from '../../fake_api/plante';
+import { Plante } from '../../Models/plante';
 import imgTomate from '../../assets/tomate.png'
 import imgAloevera from '../../assets/aloevera.png'
 import imgNana from '../../assets/nana.png'

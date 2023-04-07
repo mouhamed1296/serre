@@ -1,4 +1,4 @@
-import { Climat } from "../../fake_api/historique"
+import { Climat } from "../../Models/historique"
 
 /* Définition des types des props du composant HistoryItem */
 type HistoryItemProps = {

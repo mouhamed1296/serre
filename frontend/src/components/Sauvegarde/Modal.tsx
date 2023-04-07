@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Plante } from '../../fake_api/plante'
+import { Plante } from '../../Models/plante'
 import Success from './Success'
 import imgTomate from '../../assets/tomate.png'
 import imgAloevera from '../../assets/aloevera.png'

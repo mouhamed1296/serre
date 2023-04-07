@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import './Parametre.css'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
-import { Plante } from '../../fake_api/plante';
+import { Plante } from '../../Models/plante';
 
 function Parametre() {
     /* Déclaration des variables d'état */
