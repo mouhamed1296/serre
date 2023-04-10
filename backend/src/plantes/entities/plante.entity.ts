@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 
 @Schema()
@@ -11,6 +12,9 @@ export class Plante {
 
     @Prop()
     heureArrosage: string;
+
+    @Prop()
+    etat: boolean;
 }
 
 

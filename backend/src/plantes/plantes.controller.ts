@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { PlantesService } from './plantes.service';
 import { CreatePlanteDto } from './dto/create-plante.dto';
@@ -25,10 +26,5 @@ export class PlantesController {
   @Patch(':id')
   update(@Param('id') id: string, @Body() updatePlanteDto: UpdatePlanteDto) {
     return this.plantesService.update(id, updatePlanteDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.plantesService.remove(+id);
   }
 }

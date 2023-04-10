@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import { Climat } from "../../fake_api/historique";
+import { Climat } from "../../Models/historique";
 import NoResult from "./NoResult";
 import Pagination from "./Pagination";
 import HistoryItem from "./HistoryItem";
@@ -7,11 +7,13 @@ import HistoryItem from "./HistoryItem";
 
 /* Composant Historique */
 export function Historique() {
+    /* Stockage des données de l'historique dans une variable d'état */
     const [history, setHistory] = useState<Climat[]>([]);
 
-    /* Stockage des données de l'historique dans une variable d'état */
-    const [data, setData] = useState<Climat[]>([]);
+    /* toute l'historique est stockée dans la variable d'état history, mais pour la pagination, on ne veut afficher que 4 éléments à la fois, donc on crée une variable d'état pour stocker les 4 éléments à afficher */
+    const [currentItems, setCurrentItems] = useState<Climat[]>([]);
 
+    /* Variable d'état pour gèrer la page courante */
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [itemsPerPage] = useState<number>(4);
     const [totalItems, setTotalItems] = useState<number>(0);
@@ -23,7 +25,7 @@ export function Historique() {
         const indexOfLastItem = pageNumber * itemsPerPage;
         const indexOfFirstItem = indexOfLastItem - itemsPerPage;
         const currentItems = history.slice(indexOfFirstItem, indexOfLastItem);
-        setData(currentItems);
+        setCurrentItems(currentItems);
     }
     
 
@@ -36,18 +38,24 @@ export function Historique() {
     /* Fonction de recherche par date */
     const search = (e: any) => {
         setSearchMode(true);
-        const value = e.target.value;
-        if (value === "") {
+
+        if (e.target.value === "") {
             setSearchMode(false);
             paginate(1);
             return;
         }
+        const dateSearch = new Date(e.target.value);
+        
         const result = history.filter((item) => {
-            //return item.date.toLowerCase().includes(value.toLowerCase());
+            const date =  item.date;
+            
+            return date.getFullYear() === dateSearch.getFullYear() && date.getMonth() + 1 === dateSearch.getMonth() + 1 && date.getDate() === dateSearch.getDate();
         });
         setHasResult(result.length > 0); 
-        setData(result);
+        setCurrentItems(result);
     }
+
+    
 
     useEffect(() => {
         /* Récupération des données de l'historique */
@@ -60,7 +68,20 @@ export function Historique() {
             if (response.ok) {
                 response.json().then((data: Climat[]) => {
                     data = data.filter((item) => item._id.year != null)
-                    setHistory(data);
+                    console.log(data);
+                    const climat = data.map((item) => {
+                        return {
+                            date: new Date(item._id.year, item._id.month - 1, item._id.day),
+                            temperature: item.temperature,
+                            humidityA: item.humidityA,
+                            humidityS: item.humidityS,
+                            luminosity: item.luminosity,
+                            _id: item._id,
+                        }
+                    });
+                    const sortedClimat = climat.sort((a, b) => b.date.getTime() - a.date.getTime());
+                    setHistory(sortedClimat);
+                    setCurrentItems(sortedClimat.slice(0, 4));
                     setTotalItems(data.length);
                 });
             }
@@ -89,8 +110,9 @@ export function Historique() {
                 </tr>
                 </thead>
                 <tbody>
-                {hasResult && data.map((item, index) => (
+                {hasResult && currentItems.map((item, index) => (
                     <HistoryItem data={item} key={index} />
+                    //<p>Ok cool</p>
                 ))}
                 {!hasResult && 
                     <NoResult />
