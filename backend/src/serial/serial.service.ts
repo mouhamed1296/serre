@@ -4,7 +4,7 @@ import { ReadlineParser } from '@serialport/parser-readline';
 @Injectable()
 export class SerialService {
   private port = new SerialPort({
-    path: 'COM10',
+    path: '/dev/tty/USB0',
     baudRate: 9600,
     dataBits: 8,
     parity: 'none',
