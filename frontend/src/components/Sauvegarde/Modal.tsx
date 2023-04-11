@@ -5,7 +5,12 @@ import imgTomate from '../../assets/tomate.png'
 import imgAloevera from '../../assets/aloevera.png'
 import imgNana from '../../assets/nana.png'
 
-const Modal = ({ show, setShow, data, plantes }: { show: boolean, setShow: any, data: Plante, plantes: Plante[] }) => {
+const Modal = ({ show, setShow, setRefreshData, data , plantes}: {
+  show: boolean,
+  setShow: any,
+  data: Plante,
+  plantes: Plante[] 
+  setRefreshData: (v: boolean) => void}) => {
   const [showM, setShowM] = useState<boolean>(false)
   const [showM1, setShowM1] = useState<boolean>(false)
 
@@ -37,10 +42,12 @@ const Modal = ({ show, setShow, data, plantes }: { show: boolean, setShow: any, 
       .then(res => res.json())
       .then(data => {
         console.log(data);
-        setShowM1(true)
-        setTimeout(() => {
-          setShowM1(false)
-        }, 2000);
+        setShow(false);
+        setRefreshData(true);
+        // setShowM1(true)
+        // setTimeout(() => {
+        //   setShowM1(false)
+        // }, 3000);
       })
   }
 
@@ -57,7 +64,7 @@ const Modal = ({ show, setShow, data, plantes }: { show: boolean, setShow: any, 
       .then(data => {
         console.log(data);
         setShow(false)
-        window.location.reload()
+        setRefreshData(true);
       })
   }
 
@@ -96,17 +103,16 @@ const Modal = ({ show, setShow, data, plantes }: { show: boolean, setShow: any, 
               </div>
             </div>
             <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-              <button type="button" className="inline-flex w-full justify-center rounded-md bg-emerald-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500 sm:ml-3 sm:w-auto">{
-                <button onClick={() => {
+            {data.etat === false && <button onClick={() => {
                   appliquer()
-                }}>
-                  Appliquer
-                </button>
+                }} type="button" className="inline-flex w-full justify-center rounded-md bg-emerald-600 px-3 py-2 text-sm font-semibold
+                 text-white shadow-sm hover:bg-emerald-500 sm:ml-3 sm:w-auto">
+                    Appliquer
+                  </button>
               }
-              </button>
               {data.etat === true &&
-                <button onClick={() => { desactive() }} type="button" className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">
-                  Dasactiver
+                <button onClick={() => { desactive() }} type="button" className="mt-3 inline-flex w-full justify-center rounded-md bg-red-700 px-3 py-2 text-sm font-semibold text-white shadow-sm ring-1 ring-inset ring-red-300 hover:bg-red-600 sm:mt-0 sm:w-auto">
+                  Désactiver
                 </button>}
             </div>
           </div>

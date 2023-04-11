@@ -22,38 +22,55 @@ function CtrlSysteme() {
         && localStorage.getItem('isFirstEvent') === 'true');
     const [toggle2, setToggle2] = useState(localStorage.getItem('toggle2') === 'true'
         && localStorage.getItem('isFirstEvent') === 'true');
+    const [luminosity, setLuminosity] = useState(0);
 
     useEffect(() => {
+        //verifier si l'arduino est connecté
         listenMessage('error_systeme', (message) => {
             console.log('message', message)
         })
+
+        //verifier si le dht11 est connecté
         socket1.listenMessage('data', (data) => {
-            if (data.temperature === 0) {
+            if (data.temperature === 0 && data.humidityA === 0) {
                 setDHTConnected(false);
             } else {
                 setDHTConnected(true);
             }
+            setLuminosity(data.luminosity);
+            /*if(data.luminosity < 30) {
+                setToggle2(true);
+            } else {
+                setToggle2(false);
+            }*/
         })
+
+        //verifier si l'arduino est connecté
         listenMessage('systeme_on', (message) => {
             setArduinoConnected(true);
             localStorage.setItem('isFirstEvent', String(true));
            // console.log('message', message)
         })
+
+        //verifier si l'arduino est connecté
         listenMessage('systeme_off', (message) => {
-            let isFirstEvent = localStorage.getItem('isFirstEvent') !== 'false';
+            setArduinoConnected(false);
+            /*let isFirstEvent = localStorage.getItem('isFirstEvent') !== 'false';
             if (isFirstEvent) {
                 setArduinoConnected(false);
                 isFirstEvent = false; // Set the flag to false, so we don't reload the page again
                 localStorage.setItem('isFirstEvent', String(false)); // Store the flag in local storage
                 location.reload(); // Reload the page
                 //console.log('message', message);
-            }
+            }*/
         })
     }, [listenMessage]);
 
     useEffect(() => {
+
+        //Permet de vérifier l'etat de la pompe
         listenMessage('pompe_status', (message) => {
-            if(message === 1) {
+            if(message == 1) {
                 localStorage.setItem('toggle', String(true));
                 setToggle(true);
             } else {
@@ -61,6 +78,8 @@ function CtrlSysteme() {
                 setToggle(false);
             }
         })
+
+        //permet de vérifier l'etat du toit
         listenMessage('toit_status', (message) => {
             if(message === 1) {
                 localStorage.setItem('toggle2', String(true));
@@ -70,6 +89,8 @@ function CtrlSysteme() {
                 setToggle2(false);
             }
         })
+
+        //permet de vérifier l'etat de l'extracteur d'air
         listenMessage('fan_status', (message) => {
             if(message === 1) {
                 localStorage.setItem('toggleFan', String(true));
@@ -82,6 +103,7 @@ function CtrlSysteme() {
 
     },[toggle, toggle2, toggleFan, arduinoConnected]);
 
+    //permet de vérifier l'etat de l'arduino
     useEffect(() => {
         if(!arduinoConnected){
             setInterval(() => {
@@ -91,6 +113,7 @@ function CtrlSysteme() {
     }
     , [sendMessage, arduinoConnected]);
 
+    //permet d'effectuer l'arrosage
     useEffect(() => {
         if(toggle) {
             sendMessage('arrosage_on', 1);
@@ -99,6 +122,8 @@ function CtrlSysteme() {
         }
 
     }, [sendMessage, toggle]);
+
+    //permet d'ouvrir le toit
     useEffect(() => {
         if(toggle2) {
             sendMessage('toit_ouvert', 'o');
@@ -107,6 +132,7 @@ function CtrlSysteme() {
         }
 
     }, [sendMessage, toggle2]);
+
     const handleClick = () => {
         setToggle(!toggle)
     };

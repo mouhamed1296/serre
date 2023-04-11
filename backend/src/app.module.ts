@@ -1,4 +1,5 @@
-import { Module } from '@nestjs/common';
+/* eslint-disable prettier/prettier */
+import { Module, OnModuleInit } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
@@ -8,6 +9,9 @@ import { AuthModule } from './auth/auth.module';
 import { PlantesModule } from './plantes/plantes.module';
 import { ClimatModule } from './climat/climat.module';
 import { SerialService } from './serial/serial.service';
+import { ScheduleModule } from '@nestjs/schedule';
+import { TasksService } from './tasks/tasks.service';
+import { TasksModule } from './tasks/tasks.module';
 
 
 @Module({
@@ -18,6 +22,7 @@ import { SerialService } from './serial/serial.service';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    ScheduleModule.forRoot(),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -27,8 +32,15 @@ import { SerialService } from './serial/serial.service';
     }),
     AuthModule,
     PlantesModule,
+    TasksModule,
   ],
   controllers: [AppController],
-  providers: [AppService, SerialService],
+  providers: [AppService, SerialService, TasksService],
 })
-export class AppModule {}
+export class AppModule implements OnModuleInit {
+  constructor(private readonly tasksService: TasksService) {}
+
+  async onModuleInit() {
+    await this.tasksService.applySettings();
+  }
+}

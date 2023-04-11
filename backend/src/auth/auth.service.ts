@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { ConsoleLogger, Injectable } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
