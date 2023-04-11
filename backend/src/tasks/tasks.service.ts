@@ -1,8 +1,9 @@
+/* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { CronJob } from 'cron';
 import { PlantesService } from 'src/plantes/plantes.service';
-import { SerialService, serialService } from 'src/serial/serial.service';
+import { serialService } from 'src/serial/serial.service';
 
 @Injectable()
 export class TasksService {
@@ -19,14 +20,14 @@ export class TasksService {
     }
     const hours = plante[0].heureArrosage.split('/');
     hours.forEach((hour) => {
-      const time = 11; //hour.split('h')[0];
-      const minute = 31;
+      const time = 22; //hour.split('h')[0];
+      const minute = 26;
       const duration = 10;
       const pompeOnJob = new CronJob(
         `0 ${minute} ${time} * * *`,
         () => {
           serialService.writeToPort('1');
-          console.log('Cron job executed');
+          console.log('Allumage pompe');
         },
         null,
         true,
@@ -37,7 +38,7 @@ export class TasksService {
         `${duration} ${minute} ${time} * * *`,
         () => {
           serialService.writeToPort('0');
-          console.log('Cron job executed');
+          console.log('Extinction pompe');
         },
         null,
         true,

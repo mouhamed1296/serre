@@ -14,8 +14,6 @@ import { AuthService } from './auth.service';
 import { serialService } from '../serial/serial.service';
 import { Cron, CronExpression, SchedulerRegistry } from '@nestjs/schedule';
 import { Logger } from '@nestjs/common';
-import { TasksService } from 'src/tasks/tasks.service';
-import { CronJob } from 'cron';
 
 @WebSocketGateway({
   cors: true,
@@ -99,9 +97,23 @@ export class AuthGateway implements OnGatewayConnection, OnGatewayDisconnect {
     client.emit('hello', 'Hello client!');
     this.parser.on('data', (data) => {
       const values = data.split('/');
-      const pompe = parseFloat(values[4]);
-      const toit = parseFloat(values[5]);
+      let pompe = parseFloat(values[4]);
+      let toit = parseFloat(values[5]);
       const fan = parseFloat(values[6]);
+      const luminosity = parseFloat(values[3]);
+      const humidityS = parseFloat(values[2]);
+      if (luminosity < 300) {
+        this.port.write('o');
+        this.parser.on('data', (data) => {
+          toit = parseFloat(data.split('/')[5]);
+        });
+      }
+      if (humidityS <= 5) {
+        this.port.write('1');
+        this.parser.on('data', (data) => {
+          pompe = parseFloat(data.split('/')[4]);
+        });
+      }
 
       client.emit('pompe_status', pompe);
       client.emit('toit_status', toit);

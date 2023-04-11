@@ -22,6 +22,7 @@ function CtrlSysteme() {
         && localStorage.getItem('isFirstEvent') === 'true');
     const [toggle2, setToggle2] = useState(localStorage.getItem('toggle2') === 'true'
         && localStorage.getItem('isFirstEvent') === 'true');
+    const [luminosity, setLuminosity] = useState(0);
 
     useEffect(() => {
         //verifier si l'arduino est connecté
@@ -36,11 +37,12 @@ function CtrlSysteme() {
             } else {
                 setDHTConnected(true);
             }
-            if(data.luminosity < 30) {
+            setLuminosity(data.luminosity);
+            /*if(data.luminosity < 30) {
                 setToggle2(true);
             } else {
                 setToggle2(false);
-            }
+            }*/
         })
 
         //verifier si l'arduino est connecté
@@ -68,7 +70,7 @@ function CtrlSysteme() {
 
         //Permet de vérifier l'etat de la pompe
         listenMessage('pompe_status', (message) => {
-            if(message === 1) {
+            if(message == 1) {
                 localStorage.setItem('toggle', String(true));
                 setToggle(true);
             } else {
