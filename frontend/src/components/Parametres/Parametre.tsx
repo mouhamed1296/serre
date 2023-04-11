@@ -10,6 +10,7 @@ function Parametre() {
     let [nombre, setNombre]= useState<string>("");
     let [idPlante, setIdPlante] = useState<string>("");
     let [show, setShow] = useState<boolean>(false);
+    let [arrosageError, setArrosageError] = useState<boolean>(false);
 
     /* Récupération des plantes */
     const { isLoading, error, data:plantes } = useQuery<Plante[], Error>({
@@ -38,10 +39,10 @@ function Parametre() {
     /* Formulaire de paramétrage */
     const {
         register,
-        formState: { errors },
+        formState: { errors, isValid },
         handleSubmit,
         reset
-      } = useForm({ mode: 'onChange' });
+      } = useForm({ mode: "all" });
 
       /* Reset des valeurs par défaut */
       useEffect(() => {
@@ -53,6 +54,20 @@ function Parametre() {
 
       /* Enregistrement des paramètres */
       const onSubmit = (data: any) => {
+        const nombreArrosage = parseInt(data.nombre?.split(" ")[0]);
+        const heureArrosage = data.heure?.split("/").length;
+
+        if (!isValid) return;
+        if (Number.isNaN(nombreArrosage) || heureArrosage === undefined) return;
+        
+        if (nombreArrosage && heureArrosage && (nombreArrosage !== heureArrosage)) {
+            setArrosageError(true);
+            setTimeout(() => {
+                setArrosageError(false);
+            }, 4000);
+            return;
+        }
+        
         fetch('http://localhost:3000/plantes/' + idPlante, {
             method: 'PATCH',
             headers: {
@@ -63,7 +78,6 @@ function Parametre() {
         })
         .then(res => res.json())
         .then(data => {
-            console.log(data);
             setShow(true);
             setTimeout(() => {
                 setShow(false);
@@ -77,6 +91,9 @@ function Parametre() {
                 <h1 className='w-full text-center mb-5 text-emerald-600 text-2xl font-medium'> Paméterer l'arrosage</h1>
                 <form onSubmit={handleSubmit(onSubmit)} className='w-full flex flex-col justify-center place-items-center space-y-6'>
                     <div className='w-full'>
+                        {arrosageError && <p className='text-red-700 font-bold text-md p-4 bg-red-200 m-2'>
+                            Le nombre d'arrosage doit être égal au nombre d'heure d'arrosage
+                        </p>}
                         <div className='flex flex-row w-full justify-center'>
                             <label className='w-2/6 mt-2 text-xl'>Type de plante</label>
                             <select className='w-1/2 h-12 ml-8 bg-white border border-gray-200 rounded'

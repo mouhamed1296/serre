@@ -10,6 +10,7 @@ const Sauvegarde = () => {
     const [modalData, setModalData] = useState({} as Plante)
 
     const [data, setData] = useState<Plante[]>([]);
+    const [refreshData, setRefreshData] = useState<boolean>(false)
 
     useEffect(() => {
         fetch('http://localhost:3000/plantes', {
@@ -18,12 +19,13 @@ const Sauvegarde = () => {
                 'Content-Type': 'application/json',
             }
         })
-            .then(res => res.json())
-            .then(data => {
-                setData(data);
-                console.log(data);
-            })
-    }, [])
+        .then(res => res.json())
+        .then(data => {
+            setData(data);
+            setRefreshData(false);
+            console.log(data);
+        })
+    }, [refreshData])
 
     return (
         <div className="justify-center drop-shadow-lg m-auto w-full h-96 rounded-lg border bg-white">
@@ -59,7 +61,14 @@ const Sauvegarde = () => {
                     )
                 }
             </div>
-            <Modal show={show} setShow={setShow} data={modalData} plantes={data} />
+                <Modal 
+                    show={show}
+                    setShow={setShow}
+                    data={modalData}
+                    plantes={data}
+                    setRefreshData={setRefreshData}
+                />
+                
         </div>
     )
 }

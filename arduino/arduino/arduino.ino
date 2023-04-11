@@ -4,22 +4,27 @@
 #include <MFRC522.h>
 #include "LiquidCrystal_I2C.h"
 #include <Servo.h>
-#include <Stepper.h>
+//#include <Stepper.h>
 
 Servo myservo;
 
 LiquidCrystal_I2C lcd(0x27,16,2); // définit le type d'écran lcd 16 x 2
  
+
 //Déclaration des PINS
 #define SS_PIN 53
 #define RST_PIN 5 
 #define DHTTYPE DHT11  
 #define DHTPIN 23
-#define PRPIN A1
+#define PRPIN A4
 #define solPIN A2
 #define MOTORPIN 22
 #define POMPEPIN 24
 #define SERVOPIN 10
+#define FANPIN 30
+#define trigPin 44
+#define echoPin 46
+#define buzzerPin 48
 
 //Déclaration des variable
 boolean relayState = true; // permet de controller la pompe
@@ -28,6 +33,9 @@ boolean fanState = false; // permet de connaitre l'etat de l'extracteur d'air
 const byte ROWS= 4; //nombre de ligne du keypad
 const byte COLS= 4; //nombre de colonne du keypad
 const int stepsPerRevolution = 2048; // Définit le nombre de pas par rotation:
+int maxi = 1023;
+int mini = 0;
+int valueSol;
 
 //Représentation du keypad
 char keymap[ROWS][COLS]=
@@ -51,7 +59,8 @@ int numAttempts = 0; // current number of attempts
 DHT dht(DHTPIN, DHTTYPE);
 Keypad keypad = Keypad(makeKeymap(keymap), rowPins, colPins, ROWS, COLS);
 MFRC522 mfrc522(SS_PIN, RST_PIN);
-Stepper myStepper = Stepper ( stepsPerRevolution, 8, 10, 9, 11 ) ;
+//Stepper myStepper = Stepper ( stepsPerRevolution, 8, 10, 9, 11 ) ;
+float duration, distancecm;
 
 
 void setup() {
@@ -60,32 +69,56 @@ void setup() {
   dht.begin();
   SPI.begin();      // Initialise  SPI bus
   mfrc522.PCD_Init();   // Initialise MFRC522
-  myStepper.setSpeed ( 5 ) ;
+  
+  //myStepper.setSpeed ( 5 ) ;
 
-  lcd.init(); // initialize the LCD
+  /*lcd.init(); // initialize the LCD
   lcd.backlight(); // turn on the backlight
   lcd.display();
   lcd.setCursor(0,0);
-  lcd.print("Appuie #:");
+  lcd.print("Appuie #:");*/
 
   pinMode(PRPIN, INPUT);
   pinMode(solPIN, INPUT);
   pinMode(POMPEPIN, OUTPUT);
   pinMode(MOTORPIN, OUTPUT);
-
+  pinMode(11, OUTPUT);
   digitalWrite(POMPEPIN, 1);
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  pinMode(buzzerPin, OUTPUT);
+  digitalWrite(trigPin, LOW);
   myservo.attach(SERVOPIN);
+  myservo.write(0);
 }
 
 void loop() {
 
   //Récupération des données fournies par les capteurs
-  char key = keypad.getKey();
+  /*char key = keypad.getKey();*/
   int temp = dht.readTemperature();
   int hum = dht.readHumidity();
-  int valueSol = analogRead(solPIN);
   unsigned int valuePR = analogRead(PRPIN);
+  valueSol = map(solPIN, mini, maxi, 0, 100);
   String rfid = "";
+  digitalWrite(trigPin, LOW);
+  delay(5);
+  digitalWrite(trigPin, HIGH);
+  delay(10);
+  digitalWrite(trigPin, LOW);
+
+  //duration (in microseconds) it takes for the sound wave to be sent from sensor to object and return
+  duration = pulseIn(echoPin, HIGH, 25000UL);
+ 
+  // Convert the travel time of sound into distance, distance = time x speed of sound
+  distancecm = (duration/2) / 29.1;     //  or multiply (duration/2) by 0.0343 
+  if (distancecm < 5) {
+    digitalWrite(buzzerPin, HIGH);
+  } else {
+    digitalWrite(buzzerPin, LOW);
+  }
+  /*Serial.print(distancecm);
+  Serial.print("/");*/
 
 /* Gestion de la carte RFID Début*/
 
@@ -118,7 +151,7 @@ void loop() {
 
   /*Gestion de l'acces avec le KEYPAD Début*/
 
-  static bool waitingForCode = true; // flag indicating whether to wait for the access code or not
+  /*static bool waitingForCode = true; // flag indicating whether to wait for the access code or not
   static char code[5]; // stores the entered code
   static int codeIndex = 0; // the current index in the code array
   boolean isCorrect = false;
@@ -204,24 +237,37 @@ void loop() {
     } else if (isAlpha(data)) {
       motorState = (data == 'o') ? true : false; // convertir la chaine en booolen
       digitalWrite(MOTORPIN, motorState ? HIGH : LOW); // on ou off le moteur qui gère le toit en se basant sur la valeur boolen
-      if (motorState) {
+       myservo.write(motorState ? 90 : -90);
+      /*if (motorState) {
         myStepper.step(stepsPerRevolution);
       } else {
         myStepper.step(-stepsPerRevolution);
-      }
+      }*/
     }
   } /*else {
     //Arrosage automatique
     //relayState = valueSol > 100 ? false : true;
     // Ouverture du toit automatique
     //motorState = valuePR > 100 ? false : true;
-  }*/
+ // }*/
    
   //digitalWrite(POMPEPIN, relayState ? HIGH : LOW); // on ou off la pompe en se basant sur la valeur boolen
   //digitalWrite(MOTORPIN, motorState ? HIGH : LOW); // on ou off le moteur qui gère le toit en se basant sur la valeur boolen
 /* Réception des commandes envoyés depuis l'app Fin */
+  int autoStart = false; 
+  if (valuePR < 30 && !motorState) {
+    autoStart = true;
+    myservo.write(90);
+  } else {
+    autoStart = false;
+    myservo.write(-90);
+  }
 
   fanState = temp > 30 ? true : false;// Etat de l'extracteur d'air
+  if (valuePR < 30 ) {
+    motorState = autoStart;
+  }
+   digitalWrite(11, !fanState);
 
 /* Envoie des donnés à travers le serial port Début*/
 
@@ -239,8 +285,9 @@ void loop() {
   Serial.print("/");
   Serial.print(fanState);
   Serial.print("/");
-  Serial.println(rfid);
-
+  Serial.print(rfid);
+  Serial.print("/");
+  Serial.println(autoStart);
   /* Envoie des donnés à travers le serial port FIN*/
 
   delay(1000);

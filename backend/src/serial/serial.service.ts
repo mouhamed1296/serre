@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { SerialPort } from 'serialport';
 import { ReadlineParser } from '@serialport/parser-readline';
