@@ -20,8 +20,8 @@ export class TasksService {
     }
     const hours = plante[0].heureArrosage.split('/');
     hours.forEach((hour) => {
-      const time = 22; //hour.split('h')[0];
-      const minute = 26;
+      const time = 12; //hour.split('h')[0];
+      const minute = 23;
       const duration = 10;
       const pompeOnJob = new CronJob(
         `0 ${minute} ${time} * * *`,
