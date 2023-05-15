@@ -102,18 +102,23 @@ export class AuthGateway implements OnGatewayConnection, OnGatewayDisconnect {
       const fan = parseFloat(values[6]);
       const luminosity = parseFloat(values[3]);
       const humidityS = parseFloat(values[2]);
-      if (luminosity < 300) {
+      /*if (luminosity < 300) {
         this.port.write('o');
         this.parser.on('data', (data) => {
           toit = parseFloat(data.split('/')[5]);
         });
+      } else {
+        this.port.write('f');
+        this.parser.on('data', (data) => {
+          toit = parseFloat(data.split('/')[5]);
+        });
       }
-      if (humidityS <= 5) {
+      if (humidityS <= 10) {
         this.port.write('1');
         this.parser.on('data', (data) => {
           pompe = parseFloat(data.split('/')[4]);
         });
-      }
+      }*/
 
       client.emit('pompe_status', pompe);
       client.emit('toit_status', toit);
@@ -135,6 +140,7 @@ export class AuthGateway implements OnGatewayConnection, OnGatewayDisconnect {
     this.parser.on('data', (data) => {
       const values = data.split('/');
       const rfid = values[7];
+      console.log(rfid);
       
       if(rfid){
         this.authService.loginRfid({ rfId: rfid }).then((res) => {
